@@ -17,13 +17,18 @@ Page({
     if (options.id) {
       this.setData({ itemId: options.id });
       this.loadAuctionDetail();
-      this.checkDepositStatus();
       this.loadBidHistory();
       
       // 设置定时器，实时更新倒计时
       this.timer = setInterval(() => {
         this.updateCountdown();
       }, 1000);
+      
+      // 只有登录后才检查保证金状态
+      const app = getApp();
+      if (app.globalData.token) {
+        this.checkDepositStatus();
+      }
     }
   },
 
@@ -70,9 +75,20 @@ Page({
 
   // 检查保证金状态
   checkDepositStatus() {
-    app.checkDeposit(this.data.itemId).then(hasPaid => {
-      this.setData({ hasPaidDeposit: hasPaid });
-    });
+    const app = getApp();
+    // 只有登录用户才检查保证金状态
+    if (app.globalData.token) {
+      app.checkDeposit(this.data.itemId).then(hasPaid => {
+        this.setData({ hasPaidDeposit: hasPaid });
+      }).catch(error => {
+        console.error('检查保证金失败:', error);
+        // 出错时设置为未支付状态
+        this.setData({ hasPaidDeposit: false });
+      });
+    } else {
+      // 未登录用户，默认设置为未支付状态
+      this.setData({ hasPaidDeposit: false });
+    }
   },
 
   // 加载出价历史
