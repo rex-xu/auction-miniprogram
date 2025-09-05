@@ -14,7 +14,7 @@
   
   <!-- 竞拍记录列表 -->
   <view class="bids-list">
-    <block wx:if="bids.length > 0">
+    <block wx:if="{{bids.length > 0}}">
       <view wx:for="{{bids}}" wx:key="id" class="card" bindtap="navigateToDetail" data-id="{{item.auction_item.id}}">
         <view class="bid-item">
           <view class="bid-image">
@@ -24,7 +24,7 @@
             <view class="bid-title">{{item.auction_item.title}}</view>
             <view class="bid-meta">
               <text class="bid-price"><text class="price-symbol">我的出价:¥</text>{{item.price}}</text>
-              <text wx:if="item.auction_item.current_price > item.price" class="current-highest">
+              <text wx:if="{{item.auction_item.current_price > item.price}}" class="current-highest">
                 当前最高价:¥{{item.auction_item.current_price}}
               </text>
               <text wx:else class="i-am-highest">
@@ -38,14 +38,14 @@
         </view>
       </view>
     </block>
-    <view wx:else class="empty-state">
+    <view class="empty-state" wx:else>
       <image class="empty-icon" src="/assets/images/empty.png"></image>
       <text class="empty-text">暂无竞拍记录</text>
     </view>
   </view>
   
   <!-- 加载更多 -->
-  <view class="load-more" wx:if="hasMore" bindtap="loadMore">
+  <view class="load-more" wx:if="{{hasMore}}" bindtap="loadMore">
     <text>上拉加载更多</text>
   </view>
 </view>

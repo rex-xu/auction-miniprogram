@@ -9,7 +9,7 @@
       <text class="user-name">{{userInfo.nickname || '未登录'}}</text>
       <text class="user-id">ID: {{userInfo.id || '-'}}</text>
     </view>
-    <view class="user-action" bindtap="goToLogin" wx:if="!isLoggedIn">
+    <view class="user-action" bindtap="goToLogin" wx:if="{{!isLoggedIn}}">
       <text>登录 / 注册</text>
       <icon type="right" size="16" color="#999"></icon>
     </view>
@@ -24,14 +24,14 @@
           <image src="/assets/images/my-bids.png" mode="aspectFit"></image>
         </view>
         <text class="feature-name">我的出价</text>
-        <text class="feature-count" wx:if="myBidsCount > 0">{{myBidsCount}}</text>
+        <text class="feature-count" wx:if="{{myBidsCount > 0}}">{{myBidsCount}}</text>
       </view>
       <view class="feature-item" bindtap="goToMyWins">
         <view class="feature-icon">
           <image src="/assets/images/my-wins.png" mode="aspectFit"></image>
         </view>
         <text class="feature-name">我拍的</text>
-        <text class="feature-count" wx:if="myWinsCount > 0">{{myWinsCount}}</text>
+        <text class="feature-count" wx:if="{{myWinsCount > 0}}">{{myWinsCount}}</text>
       </view>
       <view class="feature-item" bindtap="goToMyDeposits">
         <view class="feature-icon">
@@ -56,7 +56,7 @@
           <image src="/assets/images/favorites.png" mode="aspectFit"></image>
         </view>
         <text class="feature-name">我的收藏</text>
-        <text class="feature-count" wx:if="favoritesCount > 0">{{favoritesCount}}</text>
+        <text class="feature-count" wx:if="{{favoritesCount > 0}}">{{favoritesCount}}</text>
       </view>
       <view class="feature-item" bindtap="goToViewed">
         <view class="feature-icon">
@@ -90,7 +90,7 @@
   </view>
   
   <!-- 退出登录按钮 -->
-  <view class="logout-section" wx:if="isLoggedIn">
+  <view class="logout-section" wx:if="{{isLoggedIn}}">
     <button class="btn-logout" bindtap="logout">退出登录</button>
   </view>
 </view>

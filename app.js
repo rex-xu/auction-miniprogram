@@ -120,14 +120,27 @@ App({
             // 未授权，跳转到登录页
             this.logout();
             reject(new Error('请先登录'));
+            // 调用回调函数
+            if (options.fail) options.fail(new Error('请先登录'));
           } else if (res.statusCode >= 200 && res.statusCode < 300) {
             resolve(res.data);
+            // 调用回调函数
+            if (options.success) options.success(res.data);
           } else {
-            reject(new Error(res.data.message || '请求失败'));
+            const error = new Error(res.data.message || '请求失败');
+            reject(error);
+            // 调用回调函数
+            if (options.fail) options.fail(error);
           }
+          // 调用完成回调
+          if (options.complete) options.complete();
         },
         fail: (err) => {
           reject(err);
+          // 调用回调函数
+          if (options.fail) options.fail(err);
+          // 调用完成回调
+          if (options.complete) options.complete();
         }
       });
     });

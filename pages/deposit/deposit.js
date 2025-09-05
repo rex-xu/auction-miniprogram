@@ -35,6 +35,9 @@ Page({
           icon: 'none'
         });
         wx.navigateBack();
+      },
+      complete: () => {
+        // 请求完成后的统一处理逻辑可以在这里添加
       }
     });
   },

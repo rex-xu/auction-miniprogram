@@ -13,7 +13,7 @@
   
   <!-- 保证金记录列表 -->
   <view class="deposits-list">
-    <block wx:if="deposits.length > 0">
+    <block wx:if="{{deposits.length > 0}}">
       <view wx:for="{{deposits}}" wx:key="id" class="card">
         <view class="deposit-item">
           <view class="deposit-image">
@@ -39,7 +39,7 @@
   </view>
   
   <!-- 加载更多 -->
-  <view class="load-more" wx:if="hasMore" bindtap="loadMore">
+  <view class="load-more" wx:if="{{hasMore}}" bindtap="loadMore">
     <text>上拉加载更多</text>
   </view>
 </view>

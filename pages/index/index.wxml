@@ -14,7 +14,7 @@
   
   <!-- 拍卖项目列表 -->
   <view class="auction-list">
-    <block wx:if="auctionItems.length > 0">
+    <block wx:if="{{auctionItems.length > 0}}">
       <view wx:for="{{auctionItems}}" wx:key="id" class="card" bindtap="navigateToDetail" data-id="{{item.id}}">
         <view class="auction-item">
           <view class="auction-image">
@@ -28,7 +28,7 @@
             </view>
             <view class="auction-status">
               <text class="tag {{getStatusClass(item.status)}}">{{getStatusText(item.status)}}</text>
-              <view class="countdown" wx:if="item.status === 'in_progress'">
+              <view class="countdown" wx:if="{{item.status === 'in_progress'}}">
                 剩余: 
                 <text class="countdown-item">{{formatTime(item.remaining_time, 'hours')}}</text>:
                 <text class="countdown-item">{{formatTime(item.remaining_time, 'minutes')}}</text>:
@@ -46,7 +46,7 @@
   </view>
   
   <!-- 加载更多 -->
-  <view class="load-more" wx:if="hasMore" bindtap="loadMore">
+  <view class="load-more" wx:if="{{hasMore}}" bindtap="loadMore">
     <text>上拉加载更多</text>
   </view>
 </view>

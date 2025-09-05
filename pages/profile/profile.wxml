@@ -9,13 +9,13 @@
       <text class="user-name">{{userInfo.nickname || '未登录'}}</text>
       <text class="user-phone">{{userInfo.phone || ''}}</text>
     </view>
-    <view wx:if="!isLogin" class="login-btn">
+    <view wx:if="{{!isLogin}}" class="login-btn">
       <button bindtap="navigateToLogin" size="mini" type="primary">登录</button>
     </view>
   </view>
   
   <!-- 功能列表 -->
-  <view class="feature-list" wx:if="isLogin">
+  <view class="feature-list" wx:if="{{isLogin}}">
     <view class="feature-item" bindtap="navigateToMyBids">
       <text class="feature-icon">📝</text>
       <text class="feature-text">我的竞拍</text>
@@ -36,5 +36,5 @@
   </view>
   
   <!-- 退出登录按钮 -->
-  <button wx:if="isLogin" class="logout-btn" type="warn" bindtap="logout">退出登录</button>
+  <button wx:if="{{isLogin}}" class="logout-btn" type="warn" bindtap="logout">退出登录</button>
 </view>

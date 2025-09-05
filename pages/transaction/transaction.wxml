@@ -14,7 +14,7 @@
   
   <!-- 交易记录列表 -->
   <view class="transactions-list">
-    <block wx:if="transactions.length > 0">
+    <block wx:if="{{transactions.length > 0}}">
       <view wx:for="{{transactions}}" wx:key="id" class="card" bindtap="viewTransactionDetail" data-id="{{item.id}}">
         <view class="transaction-item">
           <view class="transaction-image">
@@ -30,7 +30,7 @@
               <text>成交时间：{{formatDateTime(item.created_at)}}</text>
             </view>
           </view>
-          <view class="transaction-action" wx:if="item.status === 'unpaid'">
+          <view class="transaction-action" wx:if="{{item.status === 'unpaid'}}">
             <button class="pay-btn" size="mini" bindtap="handlePay">去支付</button>
           </view>
         </view>
@@ -43,7 +43,7 @@
   </view>
   
   <!-- 加载更多 -->
-  <view class="load-more" wx:if="hasMore" bindtap="loadMore">
+  <view class="load-more" wx:if="{{hasMore}}" bindtap="loadMore">
     <text>上拉加载更多</text>
   </view>
 </view>

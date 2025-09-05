@@ -30,7 +30,7 @@
   
   <!-- 拍卖列表 -->
   <view class="auction-list">
-    <block wx:if="!loading && auctionItems.length > 0">
+    <block wx:if="{{!loading && auctionItems.length > 0}}">
       <view class="auction-item" wx:for="{{auctionItems}}" wx:key="id" bindtap="viewDetail" data-id="{{item.id}}">
         <view class="item-image">
           <image src="{{item.image_url || '/assets/images/default-item.png'}}" mode="aspectFill"></image>
@@ -43,7 +43,7 @@
             <text class="current-price">¥{{item.current_price}}</text>
             <text class="bid-count">{{item.bid_count}}人出价</text>
           </view>
-          <view class="item-time" wx:if="item.status === 'ongoing'">
+          <view class="item-time" wx:if="{{item.status === 'ongoing'}}">
             <text class="time-label">剩余:</text>
             <text class="time-value">{{formatCountdown(item.remaining_time)}}</text>
           </view>
@@ -56,20 +56,20 @@
     </block>
     
     <!-- 空状态 -->
-    <view class="empty-state" wx:if="!loading && auctionItems.length === 0">
+    <view class="empty-state" wx:if="{{!loading && auctionItems.length === 0}}">
       <image src="/assets/images/empty-auction.png" class="empty-image"></image>
       <text class="empty-text">暂无拍卖品</text>
       <text class="empty-desc">请稍后再查看或尝试其他筛选条件</text>
     </view>
     
     <!-- 加载状态 -->
-    <view class="loading-state" wx:if="loading">
+    <view class="loading-state" wx:if="{{loading}}">
       <text class="loading-text">加载中...</text>
     </view>
   </view>
   
   <!-- 加载更多 -->
-  <view class="load-more" wx:if="!loading && hasMore">
+  <view class="load-more" wx:if="{{!loading && hasMore}}">
     <text class="load-more-text" bindtap="loadMore">上拉加载更多</text>
   </view>
 </view>

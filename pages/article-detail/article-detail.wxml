@@ -11,7 +11,7 @@
   </view>
   
   <!-- 文章封面图 -->
-  <view class="article-cover" wx:if="article.cover_image">
+  <view class="article-cover" wx:if="{{article.cover_image}}">
     <image src="{{article.cover_image}}" mode="aspectFill"></image>
   </view>
   
@@ -21,11 +21,11 @@
   </view>
   
   <!-- 相关推荐 -->
-  <view class="related-section" wx:if="relatedArticles.length > 0">
+  <view class="related-section" wx:if="{{relatedArticles.length > 0}}">
     <view class="section-title">相关推荐</view>
     <view class="related-list">
       <view class="related-item" wx:for="{{relatedArticles}}" wx:key="id" bindtap="viewRelatedArticle" data-id="{{item.id}}">
-        <view class="related-image" wx:if="item.cover_image">
+        <view class="related-image" wx:if="{{item.cover_image}}">
           <image src="{{item.cover_image}}" mode="aspectFill"></image>
         </view>
         <view class="related-info">

@@ -19,6 +19,10 @@
       <input class="input" type="password" placeholder="请确认密码" bindinput="onConfirmPasswordInput" password="true" value="{{confirmPassword}}" />
     </view>
     
+    <view class="agreement-checkbox" wx:if="{{showAgreement}}">
+      <!-- 协议内容 -->
+    </view>
+    
     <button class="btn btn-primary" bindtap="register" loading="{{loading}}">注册</button>
     
     <view class="login-link">

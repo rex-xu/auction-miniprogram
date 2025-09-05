@@ -81,18 +81,35 @@ Page({
   // 检查保证金状态
   checkDepositStatus() {
     const app = getApp();
+    const itemId = this.data.itemId;
+    
+    // 确保先将状态设置为未缴纳，避免初始状态显示错误
+    this.setData({ hasPaidDeposit: false });
+    
+    console.log(`开始检查拍品 ${itemId} 的保证金状态`);
+    
     // 只有登录用户才检查保证金状态
     if (app.globalData.token) {
-      app.checkDeposit(this.data.itemId).then(hasPaid => {
+      app.checkDeposit(itemId).then(hasPaid => {
+        console.log(`拍品 ${itemId} 保证金状态检查结果: ${hasPaid ? '已缴纳' : '未缴纳'}`);
         this.setData({ hasPaidDeposit: hasPaid });
+        
+        // 如果未缴纳保证金，自动将canBid设置为false
+        if (!hasPaid && this.data.canBid) {
+          this.setData({ canBid: false });
+          console.log('由于未缴纳保证金，已将出价权限设置为不可出价');
+        }
       }).catch(error => {
-        console.error('检查保证金失败:', error);
-        // 出错时设置为未支付状态
-        this.setData({ hasPaidDeposit: false });
+        console.error(`检查拍品 ${itemId} 保证金失败:`, error);
+        // 出错时确保设置为未支付状态
+        this.setData({ 
+          hasPaidDeposit: false,
+          canBid: false // 出错时也禁用出价功能
+        });
       });
     } else {
-      // 未登录用户，默认设置为未支付状态
-      this.setData({ hasPaidDeposit: false });
+      console.log('用户未登录，设置为未缴纳保证金状态并禁用出价功能');
+      this.setData({ canBid: false });
     }
   },
 
@@ -109,6 +126,18 @@ Page({
         // 确保使用正确的数据格式，后端返回的数据可能在res.data中
         const bidData = res.data || res;
         this.setData({ bidHistory: bidData.results || [] });
+      },
+      fail: (error) => {
+        console.error('加载出价历史失败:', error);
+        wx.showToast({
+          title: '加载出价历史失败',
+          icon: 'none'
+        });
+        // 设置空数组，确保UI不会显示错误数据
+        this.setData({ bidHistory: [] });
+      },
+      complete: () => {
+        // 请求完成后的清理操作可以在这里添加
       }
     });
   },
@@ -125,9 +154,14 @@ Page({
       'auctionItem.remaining_time': remainingTime
     });
     
-    // 如果拍卖结束，重新加载详情
+    // 如果拍卖结束，重新加载详情并清除定时器
     if (remainingTime === 0) {
       this.loadAuctionDetail();
+      // 清除定时器，避免无限循环加载
+      if (this.timer) {
+        clearInterval(this.timer);
+        this.timer = null;
+      }
     }
   },
 

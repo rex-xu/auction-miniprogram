@@ -47,11 +47,11 @@
       <text class="info-label">创建时间：</text>
       <text class="info-value">{{formatDateTime(transaction.created_at)}}</text>
     </view>
-    <view class="info-item" wx:if="transaction.paid_at">
+    <view class="info-item" wx:if="{{transaction.paid_at}}">
       <text class="info-label">支付时间：</text>
       <text class="info-value">{{formatDateTime(transaction.paid_at)}}</text>
     </view>
-    <view class="info-item" wx:if="transaction.refunded_at">
+    <view class="info-item" wx:if="{{transaction.refunded_at}}">
       <text class="info-label">退款时间：</text>
       <text class="info-value">{{formatDateTime(transaction.refunded_at)}}</text>
     </view>
@@ -75,7 +75,7 @@
   </view>
   
   <!-- 底部操作按钮 -->
-  <view class="bottom-actions" wx:if="transaction.status === 'unpaid'">
+  <view class="bottom-actions" wx:if="{{transaction.status === 'unpaid'}}">
     <button class="btn-primary" bindtap="handlePay">立即支付</button>
   </view>
   <view class="bottom-actions" wx:elif="transaction.status === 'paid'">
