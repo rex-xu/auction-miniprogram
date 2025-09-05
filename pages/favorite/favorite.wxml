@@ -1,0 +1,75 @@
+<!-- favorite.wxml -->
+<view class="container">
+  <view class="header">
+    <text class="title">我的收藏</text>
+  </view>
+  
+  <!-- 筛选标签 -->
+  <view class="filter-tags">
+    <view class="tag {{activeTab === 'all' ? 'active' : ''}}" bindtap="switchTab" data-tab="all">全部</view>
+    <view class="tag {{activeTab === 'auction' ? 'active' : ''}}" bindtap="switchTab" data-tab="auction">拍卖商品</view>
+    <view class="tag {{activeTab === 'article' ? 'active' : ''}}" bindtap="switchTab" data-tab="article">藏品资讯</view>
+  </view>
+  
+  <!-- 收藏列表 -->
+  <view class="favorite-list">
+    <block wx:if="!loading && favorites.length > 0">
+      <view class="favorite-item" wx:for="{{favorites}}" wx:key="id" bindtap="viewDetail" data-id="{{item.id}}" data-type="{{item.type}}">
+        <!-- 收藏的拍卖商品 -->
+        <view class="auction-item" wx:if="item.type === 'auction'">
+          <view class="item-image">
+            <image src="{{item.auction_item.image_url || '/assets/images/default-item.png'}}" mode="aspectFill"></image>
+          </view>
+          <view class="item-info">
+            <view class="item-title">{{item.auction_item.title}}</view>
+            <view class="item-desc">{{item.auction_item.description}}</view>
+            <view class="item-meta">
+              <text class="current-price">当前价: ¥{{item.auction_item.current_price}}</text>
+              <text class="bid-count">{{item.auction_item.bid_count}}人出价</text>
+            </view>
+            <view class="item-status">
+              <text class="status-tag">{{getStatusText(item.auction_item.status)}}</text>
+            </view>
+          </view>
+        </view>
+        
+        <!-- 收藏的藏品资讯 -->
+        <view class="article-item" wx:elif="item.type === 'article'">
+          <view class="article-image" wx:if="item.article.cover_image">
+            <image src="{{item.article.cover_image}}" mode="aspectFill"></image>
+          </view>
+          <view class="article-info">
+            <view class="article-title">{{item.article.title}}</view>
+            <view class="article-meta">
+              <text class="article-category">{{item.article.category.name}}</text>
+              <text class="article-time">{{formatDate(item.article.created_at)}}</text>
+            </view>
+          </view>
+        </view>
+        
+        <!-- 取消收藏按钮 -->
+        <view class="unfavorite-btn" bindtap="unfavorite" data-id="{{item.id}}" catchtap="stopPropagation">
+          <text class="icon">★</text>
+          <text class="text">取消收藏</text>
+        </view>
+      </view>
+    </block>
+    
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="!loading && favorites.length === 0">
+      <image src="/assets/images/empty-favorite.png" class="empty-image"></image>
+      <text class="empty-text">暂无收藏内容</text>
+      <text class="empty-desc">快去收藏您感兴趣的商品和资讯吧</text>
+    </view>
+    
+    <!-- 加载状态 -->
+    <view class="loading-state" wx:if="loading">
+      <text class="loading-text">加载中...</text>
+    </view>
+  </view>
+  
+  <!-- 加载更多 -->
+  <view class="load-more" wx:if="!loading && hasMore">
+    <text class="load-more-text" bindtap="loadMore">加载更多</text>
+  </view>
+</view>

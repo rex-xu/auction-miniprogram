@@ -1,0 +1,93 @@
+/* transaction.wxss */
+.header {
+  margin-bottom: 30rpx;
+}
+
+.filter-tags {
+  display: flex;
+  margin-bottom: 24rpx;
+  padding: 0 4rpx;
+  flex-wrap: wrap;
+}
+
+.filter-tags .tag {
+  margin-right: 20rpx;
+  margin-bottom: 16rpx;
+}
+
+.transactions-list {
+  padding-bottom: 100rpx;
+}
+
+.transaction-item {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
+.transaction-image {
+  width: 150rpx;
+  height: 150rpx;
+  margin-right: 20rpx;
+  overflow: hidden;
+  border-radius: 12rpx;
+}
+
+.transaction-image image {
+  width: 100%;
+  height: 100%;
+}
+
+.transaction-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.transaction-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 16rpx;
+  line-height: 40rpx;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.transaction-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.transaction-amount {
+  color: #ff4d4f;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.transaction-status {
+  font-size: 24rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 16rpx;
+}
+
+.transaction-time {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.transaction-action {
+  margin-left: 20rpx;
+}
+
+.pay-btn {
+  background: #00662c;
+  color: #fff;
+  font-size: 24rpx;
+  padding: 0 20rpx;
+}

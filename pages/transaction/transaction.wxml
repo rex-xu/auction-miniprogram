@@ -1,0 +1,49 @@
+<!-- transaction.wxml -->
+<view class="container">
+  <view class="header">
+    <text class="title">交易记录</text>
+  </view>
+  
+  <!-- 筛选标签 -->
+  <view class="filter-tags">
+    <view class="tag {{activeTab === 'all' ? 'tag-active' : ''}}" bindtap="switchTab" data-tab="all">全部</view>
+    <view class="tag {{activeTab === 'paid' ? 'tag-active' : ''}}" bindtap="switchTab" data-tab="paid">已支付</view>
+    <view class="tag {{activeTab === 'unpaid' ? 'tag-active' : ''}}" bindtap="switchTab" data-tab="unpaid">待支付</view>
+    <view class="tag {{activeTab === 'refunded' ? 'tag-active' : ''}}" bindtap="switchTab" data-tab="refunded">已退款</view>
+  </view>
+  
+  <!-- 交易记录列表 -->
+  <view class="transactions-list">
+    <block wx:if="transactions.length > 0">
+      <view wx:for="{{transactions}}" wx:key="id" class="card" bindtap="viewTransactionDetail" data-id="{{item.id}}">
+        <view class="transaction-item">
+          <view class="transaction-image">
+            <image src="{{item.auction_item.image_url || '/assets/images/default-item.png'}}" mode="aspectFill"></image>
+          </view>
+          <view class="transaction-info">
+            <view class="transaction-title">{{item.auction_item.title}}</view>
+            <view class="transaction-meta">
+              <text class="transaction-amount"><text class="price-symbol">¥</text>{{item.total_amount}}</text>
+              <text class="transaction-status">{{getStatusText(item.status)}}</text>
+            </view>
+            <view class="transaction-time">
+              <text>成交时间：{{formatDateTime(item.created_at)}}</text>
+            </view>
+          </view>
+          <view class="transaction-action" wx:if="item.status === 'unpaid'">
+            <button class="pay-btn" size="mini" bindtap="handlePay">去支付</button>
+          </view>
+        </view>
+      </view>
+    </block>
+    <view wx:else class="empty-state">
+      <image class="empty-icon" src="/assets/images/empty.png"></image>
+      <text class="empty-text">暂无交易记录</text>
+    </view>
+  </view>
+  
+  <!-- 加载更多 -->
+  <view class="load-more" wx:if="hasMore" bindtap="loadMore">
+    <text>上拉加载更多</text>
+  </view>
+</view>

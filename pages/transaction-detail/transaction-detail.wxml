@@ -1,0 +1,88 @@
+<!-- transaction-detail.wxml -->
+<view class="container">
+  <view class="header">
+    <text class="title">交易详情</text>
+  </view>
+  
+  <!-- 交易状态 -->
+  <view class="status-section {{transaction.status}}">
+    <view class="status-icon">{{getStatusIcon(transaction.status)}}</view>
+    <view class="status-text">{{getStatusText(transaction.status)}}</view>
+    <view class="status-desc">{{getStatusDesc(transaction.status)}}</view>
+  </view>
+  
+  <!-- 拍卖品信息 -->
+  <view class="section">
+    <view class="section-title">拍卖品信息</view>
+    <view class="auction-item">
+      <view class="auction-image">
+        <image src="{{transaction.auction_item.image_url || '/assets/images/default-item.png'}}" mode="aspectFill"></image>
+      </view>
+      <view class="auction-info">
+        <view class="auction-title">{{transaction.auction_item.title}}</view>
+        <view class="auction-desc">{{transaction.auction_item.description}}</view>
+        <view class="auction-meta">
+          <text class="auction-category">品类：{{transaction.auction_item.category.name}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 交易信息 -->
+  <view class="section">
+    <view class="section-title">交易信息</view>
+    <view class="info-item">
+      <text class="info-label">交易编号：</text>
+      <text class="info-value">{{transaction.order_number}}</text>
+    </view>
+    <view class="info-item">
+      <text class="info-label">成交价格：</text>
+      <text class="info-value price">¥{{transaction.total_amount}}</text>
+    </view>
+    <view class="info-item">
+      <text class="info-label">保证金：</text>
+      <text class="info-value">¥{{transaction.deposit_amount}}</text>
+    </view>
+    <view class="info-item">
+      <text class="info-label">创建时间：</text>
+      <text class="info-value">{{formatDateTime(transaction.created_at)}}</text>
+    </view>
+    <view class="info-item" wx:if="transaction.paid_at">
+      <text class="info-label">支付时间：</text>
+      <text class="info-value">{{formatDateTime(transaction.paid_at)}}</text>
+    </view>
+    <view class="info-item" wx:if="transaction.refunded_at">
+      <text class="info-label">退款时间：</text>
+      <text class="info-value">{{formatDateTime(transaction.refunded_at)}}</text>
+    </view>
+  </view>
+  
+  <!-- 收货信息 -->
+  <view class="section">
+    <view class="section-title">收货信息</view>
+    <view class="info-item">
+      <text class="info-label">收货人：</text>
+      <text class="info-value">{{transaction.recipient_name || '未填写'}}</text>
+    </view>
+    <view class="info-item">
+      <text class="info-label">联系电话：</text>
+      <text class="info-value">{{transaction.recipient_phone || '未填写'}}</text>
+    </view>
+    <view class="info-item">
+      <text class="info-label">收货地址：</text>
+      <text class="info-value">{{transaction.recipient_address || '未填写'}}</text>
+    </view>
+  </view>
+  
+  <!-- 底部操作按钮 -->
+  <view class="bottom-actions" wx:if="transaction.status === 'unpaid'">
+    <button class="btn-primary" bindtap="handlePay">立即支付</button>
+  </view>
+  <view class="bottom-actions" wx:elif="transaction.status === 'paid'">
+    <button class="btn-secondary" bindtap="contactSeller">联系卖家</button>
+    <button class="btn-primary" bindtap="confirmReceive">确认收货</button>
+  </view>
+  <view class="bottom-actions" wx:elif="transaction.status === 'refunded'">
+    <button class="btn-secondary" bindtap="contactSeller">联系卖家</button>
+  </view>
+</view>

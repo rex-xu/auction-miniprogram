@@ -1,0 +1,89 @@
+<!-- terms.wxml -->
+<view class="container">
+  <view class="header">
+    <text class="title">用户协议</text>
+  </view>
+  
+  <view class="terms-content">
+    <view class="terms-section">
+      <text class="section-title">一、服务条款的接受</text>
+      <text class="section-content">
+        欢迎您使用我们的拍卖小程序（以下简称"本应用"）。本协议是您与本应用之间关于使用本应用服务的法律协议。请您仔细阅读本协议的全部内容，特别是其中以加粗或下划线标注的条款，这些条款可能会明确您应履行的义务或对您的权利有所限制。
+      </text>
+      <text class="section-content">
+        一旦您注册、使用或以其他方式访问本应用，即表示您已同意并接受本协议的全部条款和条件。如您不同意本协议的任何内容，您应立即停止注册或使用本应用。
+      </text>
+    </view>
+    
+    <view class="terms-section">
+      <text class="section-title">二、服务内容</text>
+      <text class="section-content">
+        本应用提供在线拍卖服务，包括但不限于拍卖商品浏览、参与竞拍、缴纳保证金、查看竞拍记录、支付货款等功能。
+      </text>
+      <text class="section-content">
+        本应用有权在必要时变更、中断或终止部分或全部服务，并不承担因此给您造成的任何损失。
+      </text>
+    </view>
+    
+    <view class="terms-section">
+      <text class="section-title">三、用户注册与账户安全</text>
+      <text class="section-content">
+        1. 您在使用本应用服务前，必须注册一个账户。您应提供真实、准确、完整的个人资料，并及时更新。
+      </text>
+      <text class="section-content">
+        2. 您应妥善保管您的账户和密码，对使用您账户进行的所有操作负全部责任。
+      </text>
+      <text class="section-content">
+        3. 如发现任何未经授权使用您账户的情况，应立即通知我们。
+      </text>
+    </view>
+    
+    <view class="terms-section">
+      <text class="section-title">四、用户行为规范</text>
+      <text class="section-content">
+        1. 您在使用本应用时，必须遵守中华人民共和国的相关法律法规。
+      </text>
+      <text class="section-content">
+        2. 您不得利用本应用从事任何违法或违规活动，包括但不限于：发布虚假信息、恶意竞拍、欺诈等。
+      </text>
+      <text class="section-content">
+        3. 您不得干扰本应用的正常运行，不得对本应用进行逆向工程、破解等操作。
+      </text>
+    </view>
+    
+    <view class="terms-section">
+      <text class="section-title">五、知识产权</text>
+      <text class="section-content">
+        本应用及其相关的所有内容，包括但不限于文字、图片、音频、视频、软件、程序、数据等，均受著作权法、商标法等相关法律法规的保护。未经授权，您不得复制、修改、传播或用于其他商业目的。
+      </text>
+    </view>
+    
+    <view class="terms-section">
+      <text class="section-title">六、免责声明</text>
+      <text class="section-content">
+        1. 本应用不对因网络故障、系统故障、自然灾害等不可抗力因素导致的服务中断或数据丢失承担责任。
+      </text>
+      <text class="section-content">
+        2. 本应用不对用户之间因使用本应用服务而产生的纠纷承担责任，用户应自行解决。
+      </text>
+    </view>
+    
+    <view class="terms-section">
+      <text class="section-title">七、协议的修改</text>
+      <text class="section-content">
+        我们有权随时修改本协议，修改后的协议将在本应用上公布。继续使用本应用将视为您接受修改后的协议。
+      </text>
+    </view>
+    
+    <view class="terms-section">
+      <text class="section-title">八、法律适用与争议解决</text>
+      <text class="section-content">
+        本协议的订立、执行、解释及争议的解决均适用中华人民共和国法律。如就本协议发生任何争议，双方应友好协商解决；协商不成的，任何一方均有权向有管辖权的人民法院提起诉讼。
+      </text>
+    </view>
+    
+    <view class="terms-update">
+      <text>更新日期：2023年12月1日</text>
+    </view>
+  </view>
+</view>

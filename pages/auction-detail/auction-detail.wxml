@@ -1,0 +1,76 @@
+<!-- auction-detail.wxml -->
+<view class="container">
+  <!-- 拍卖品图片 -->
+  <view class="item-image">
+    <image src="{{auctionItem.image_url || '/assets/images/default-item.png'}}" mode="aspectFill"></image>
+  </view>
+  
+  <!-- 拍卖品信息 -->
+  <view class="card">
+    <view class="item-title">{{auctionItem.title}}</view>
+    <view class="item-meta">
+      <text class="current-price"><text class="price-symbol">当前价:¥</text>{{auctionItem.current_price}}</text>
+      <text class="bid-increment">加价幅度: ¥{{auctionItem.bid_increment}}</text>
+    </view>
+    
+    <!-- 状态和倒计时 -->
+    <view class="item-status">
+      <text class="tag {{getStatusClass(auctionItem.status)}}">{{getStatusText(auctionItem.status)}}</text>
+      <view class="countdown" wx:if="auctionItem.status === 'in_progress'">
+        剩余: 
+        <text class="countdown-item">{{formatTime(auctionItem.remaining_time, 'hours')}}</text>:
+        <text class="countdown-item">{{formatTime(auctionItem.remaining_time, 'minutes')}}</text>:
+        <text class="countdown-item">{{formatTime(auctionItem.remaining_time, 'seconds')}}</text>
+      </view>
+      <text wx:else class="time-info">{{auctionItem.start_time ? '开始时间: ' + formatDate(auctionItem.start_time) : ''}}</text>
+    </view>
+    
+    <!-- 保证金信息 -->
+    <view class="deposit-info">
+      <text class="deposit-text">保证金: ¥{{auctionItem.deposit_amount}}</text>
+      <text class="deposit-status" wx:if="hasPaidDeposit">✓ 已缴纳</text>
+      <text class="deposit-status" wx:else>✗ 未缴纳</text>
+    </view>
+  </view>
+  
+  <!-- 竞拍区域 -->
+  <view class="card" wx:if="auctionItem.status === 'in_progress'">
+    <text class="subtitle">当前出价</text>
+    <input class="bid-input" type="number" placeholder="请输入出价金额" bindinput="onBidInput" value="{{bidPrice}}" />
+    <view class="quick-bids">
+      <text class="quick-bid" wx:for="{{quickBidOptions}}" wx:key="index" bindtap="onQuickBid" data-price="{{item}}">{{item}}</text>
+    </view>
+    <button class="btn btn-primary" bindtap="submitBid" disabled="{{!canBid}}" loading="{{submittingBid}}">
+      {{canBid ? (hasPaidDeposit ? '确认出价' : '请先缴纳保证金') : '无法出价'}}
+    </button>
+    <view wx:if="!hasPaidDeposit" class="deposit-tip">
+      <text>您需要先缴纳保证金才能参与竞拍</text>
+      <button class="btn btn-default" bindtap="navigateToDeposit" size="mini">去缴纳</button>
+    </view>
+  </view>
+  
+  <!-- 历史出价记录 -->
+  <view class="card">
+    <text class="subtitle">出价记录</text>
+    <view class="bid-history">
+      <block wx:if="bidHistory.length > 0">
+        <view wx:for="{{bidHistory}}" wx:key="id" class="bid-record">
+          <view class="bid-info">
+            <text class="bidder">{{item.bidder.nickname || '匿名用户'}}</text>
+            <text class="bid-price"><text class="price-symbol">¥</text>{{item.price}}</text>
+          </view>
+          <text class="bid-time">{{formatDateTime(item.created_at)}}</text>
+        </view>
+      </block>
+      <view wx:else class="empty-state">
+        <text class="empty-text">暂无出价记录</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 拍卖品详情 -->
+  <view class="card">
+    <text class="subtitle">商品详情</text>
+    <rich-text class="item-description" nodes="{{auctionItem.description || '暂无描述'}}"/>
+  </view>
+</view>

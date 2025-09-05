@@ -1,0 +1,81 @@
+/* my-deposits.wxss */
+.header {
+  margin-bottom: 30rpx;
+}
+
+.filter-tags {
+  display: flex;
+  margin-bottom: 24rpx;
+  padding: 0 4rpx;
+  flex-wrap: wrap;
+}
+
+.filter-tags .tag {
+  margin-right: 20rpx;
+  margin-bottom: 16rpx;
+}
+
+.deposits-list {
+  padding-bottom: 100rpx;
+}
+
+.deposit-item {
+  display: flex;
+  width: 100%;
+}
+
+.deposit-image {
+  width: 150rpx;
+  height: 150rpx;
+  margin-right: 20rpx;
+  overflow: hidden;
+  border-radius: 12rpx;
+}
+
+.deposit-image image {
+  width: 100%;
+  height: 100%;
+}
+
+.deposit-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.deposit-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 16rpx;
+  line-height: 40rpx;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.deposit-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.deposit-amount {
+  color: #ff4d4f;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.deposit-status {
+  font-size: 24rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 16rpx;
+}
+
+.deposit-time {
+  font-size: 24rpx;
+  color: #999;
+}

@@ -1,0 +1,40 @@
+<!-- profile.wxml -->
+<view class="container">
+  <!-- 用户信息卡片 -->
+  <view class="user-card">
+    <view class="user-avatar">
+      <image src="{{userInfo.avatar || '/assets/images/default-avatar.png'}}" mode="aspectFill"></image>
+    </view>
+    <view class="user-info">
+      <text class="user-name">{{userInfo.nickname || '未登录'}}</text>
+      <text class="user-phone">{{userInfo.phone || ''}}</text>
+    </view>
+    <view wx:if="!isLogin" class="login-btn">
+      <button bindtap="navigateToLogin" size="mini" type="primary">登录</button>
+    </view>
+  </view>
+  
+  <!-- 功能列表 -->
+  <view class="feature-list" wx:if="isLogin">
+    <view class="feature-item" bindtap="navigateToMyBids">
+      <text class="feature-icon">📝</text>
+      <text class="feature-text">我的竞拍</text>
+      <text class="feature-arrow">→</text>
+    </view>
+    
+    <view class="feature-item" bindtap="navigateToDeposits">
+      <text class="feature-icon">💰</text>
+      <text class="feature-text">我的保证金</text>
+      <text class="feature-arrow">→</text>
+    </view>
+    
+    <view class="feature-item" bindtap="navigateToSettings">
+      <text class="feature-icon">⚙️</text>
+      <text class="feature-text">设置</text>
+      <text class="feature-arrow">→</text>
+    </view>
+  </view>
+  
+  <!-- 退出登录按钮 -->
+  <button wx:if="isLogin" class="logout-btn" type="warn" bindtap="logout">退出登录</button>
+</view>

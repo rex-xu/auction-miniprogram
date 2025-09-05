@@ -1,0 +1,72 @@
+<!-- logistics.wxml -->
+<view class="container">
+  <view class="header">
+    <text class="title">物流信息</text>
+  </view>
+  
+  <!-- 加载状态 -->
+  <view class="loading-container" wx:if="{{loading && !noData && !logisticsInfo}}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+  
+  <!-- 无物流信息状态 -->
+  <view class="no-data-container" wx:if="{{noData && !loading}}">
+    <image class="empty-image" src="/assets/images/empty.png"></image>
+    <text class="no-data-text">暂无物流信息</text>
+    <button 
+      class="reload-btn"
+      type="default"
+      bindtap="reloadLogisticsInfo"
+    >
+      重新加载
+    </button>
+  </view>
+  
+  <!-- 物流信息内容 -->
+  <view class="logistics-content" wx:if="{{logisticsInfo && !loading}}">
+    <!-- 物流公司信息 -->
+    <view class="company-info">
+      <text class="company-name">{{logisticsInfo.company}}</text>
+      <text class="tracking-no">运单号：{{logisticsInfo.tracking_no}}</text>
+    </view>
+    
+    <!-- 物流状态 -->
+    <view class="logistics-status">
+      <text class="status-text">当前状态：{{logisticsInfo.status}}</text>
+    </view>
+    
+    <!-- 物流轨迹 -->
+    <view class="logistics-timeline">
+      <block wx:for="{{logisticsInfo.traces}}" wx:key="index">
+        <view class="timeline-item">
+          <view class="timeline-line"></view>
+          <view class="timeline-dot {{index === 0 ? 'active' : ''}}"></view>
+          <view class="timeline-content">
+            <text class="timeline-text">{{item.description}}</text>
+            <text class="timeline-time">{{item.time}}</text>
+            <text class="timeline-location" wx:if="{{item.location}}">{{item.location}}</text>
+          </view>
+        </view>
+      </block>
+    </view>
+    
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button 
+        class="action-btn"
+        type="primary"
+        bindtap="contactCourier"
+      >
+        联系快递员
+      </button>
+      <button 
+        class="action-btn"
+        type="default"
+        bindtap="contactService"
+      >
+        联系客服
+      </button>
+    </view>
+  </view>
+</view>

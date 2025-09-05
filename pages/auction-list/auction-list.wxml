@@ -1,0 +1,75 @@
+<!-- auction-list.wxml -->
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input">
+      <icon type="search" size="28"></icon>
+      <input type="text" placeholder="搜索拍卖品" value="{{searchKeyword}}" bindinput="onSearchInput" bindconfirm="searchAuction"></input>
+    </view>
+  </view>
+  
+  <!-- 筛选栏 -->
+  <view class="filter-bar">
+    <scroll-view scroll-x enable-flex>
+      <view class="filter-item {{activeFilter === 'all' ? 'active' : ''}}" bindtap="switchFilter" data-filter="all">全部</view>
+      <view class="filter-item {{activeFilter === 'ongoing' ? 'active' : ''}}" bindtap="switchFilter" data-filter="ongoing">进行中</view>
+      <view class="filter-item {{activeFilter === 'upcoming' ? 'active' : ''}}" bindtap="switchFilter" data-filter="upcoming">即将开始</view>
+      <view class="filter-item {{activeFilter === 'ended' ? 'active' : ''}}" bindtap="switchFilter" data-filter="ended">已结束</view>
+    </scroll-view>
+  </view>
+  
+  <!-- 分类栏 -->
+  <view class="category-bar">
+    <scroll-view scroll-x enable-flex>
+      <view class="category-item {{activeCategory === 'all' ? 'active' : ''}}" bindtap="switchCategory" data-category="all">全部分类</view>
+      <block wx:for="{{categories}}" wx:key="id">
+        <view class="category-item {{activeCategory === item.id ? 'active' : ''}}" bindtap="switchCategory" data-category="{{item.id}}">{{item.name}}</view>
+      </block>
+    </scroll-view>
+  </view>
+  
+  <!-- 拍卖列表 -->
+  <view class="auction-list">
+    <block wx:if="!loading && auctionItems.length > 0">
+      <view class="auction-item" wx:for="{{auctionItems}}" wx:key="id" bindtap="viewDetail" data-id="{{item.id}}">
+        <view class="item-image">
+          <image src="{{item.image_url || '/assets/images/default-item.png'}}" mode="aspectFill"></image>
+          <view class="status-badge {{item.status}}">{{getStatusText(item.status)}}</view>
+        </view>
+        <view class="item-info">
+          <view class="item-title">{{item.title}}</view>
+          <view class="item-desc">{{item.description}}</view>
+          <view class="item-meta">
+            <text class="current-price">¥{{item.current_price}}</text>
+            <text class="bid-count">{{item.bid_count}}人出价</text>
+          </view>
+          <view class="item-time" wx:if="item.status === 'ongoing'">
+            <text class="time-label">剩余:</text>
+            <text class="time-value">{{formatCountdown(item.remaining_time)}}</text>
+          </view>
+          <view class="item-time" wx:elif="item.status === 'upcoming'">
+            <text class="time-label">开始:</text>
+            <text class="time-value">{{formatDate(item.start_time)}}</text>
+          </view>
+        </view>
+      </view>
+    </block>
+    
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="!loading && auctionItems.length === 0">
+      <image src="/assets/images/empty-auction.png" class="empty-image"></image>
+      <text class="empty-text">暂无拍卖品</text>
+      <text class="empty-desc">请稍后再查看或尝试其他筛选条件</text>
+    </view>
+    
+    <!-- 加载状态 -->
+    <view class="loading-state" wx:if="loading">
+      <text class="loading-text">加载中...</text>
+    </view>
+  </view>
+  
+  <!-- 加载更多 -->
+  <view class="load-more" wx:if="!loading && hasMore">
+    <text class="load-more-text" bindtap="loadMore">上拉加载更多</text>
+  </view>
+</view>

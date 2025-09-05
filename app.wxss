@@ -1,0 +1,169 @@
+/* app.wxss */
+page {
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/* 公共样式 */
+.container {
+  padding: 20rpx;
+  box-sizing: border-box;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+/* 按钮样式 */
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 88rpx;
+  border-radius: 10rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  margin: 20rpx 0;
+}
+
+.btn-primary {
+  background-color: #ff4d4f;
+  color: #fff;
+}
+
+.btn-primary:active {
+  background-color: #ff7875;
+}
+
+.btn-default {
+  background-color: #fff;
+  color: #333;
+  border: 1rpx solid #d9d9d9;
+}
+
+.btn-default:active {
+  background-color: #f5f5f5;
+}
+
+/* 输入框样式 */
+.input {
+  height: 88rpx;
+  border: 1rpx solid #d9d9d9;
+  border-radius: 10rpx;
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  margin-bottom: 20rpx;
+  box-sizing: border-box;
+}
+
+/* 价格样式 */
+.price {
+  color: #ff4d4f;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.price-symbol {
+  font-size: 24rpx;
+  margin-right: 4rpx;
+}
+
+/* 倒计时样式 */
+.countdown {
+  display: flex;
+  align-items: center;
+  font-size: 24rpx;
+  color: #ff4d4f;
+}
+
+.countdown-item {
+  background-color: #333;
+  color: #fff;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  margin: 0 4rpx;
+}
+
+/* 标签样式 */
+.tag {
+  display: inline-block;
+  padding: 4rpx 16rpx;
+  border-radius: 16rpx;
+  font-size: 24rpx;
+  margin-right: 12rpx;
+}
+
+.tag-active {
+  background-color: #fff2f0;
+  color: #ff4d4f;
+  border: 1rpx solid #ffccc7;
+}
+
+.tag-upcoming {
+  background-color: #e6f7ff;
+  color: #1890ff;
+  border: 1rpx solid #bae7ff;
+}
+
+.tag-ended {
+  background-color: #f5f5f5;
+  color: #999;
+  border: 1rpx solid #d9d9d9;
+}
+
+/* 列表项样式 */
+.list-item {
+  display: flex;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+/* 加载更多 */
+.load-more {
+  text-align: center;
+  padding: 40rpx 0;
+  color: #999;
+  font-size: 24rpx;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 0;
+}
+
+.empty-icon {
+  width: 160rpx;
+  height: 160rpx;
+  margin-bottom: 30rpx;
+  opacity: 0.3;
+}
+
+.empty-text {
+  color: #999;
+  font-size: 28rpx;
+}

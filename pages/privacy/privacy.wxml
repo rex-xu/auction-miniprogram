@@ -1,0 +1,56 @@
+<!-- privacy.wxml -->
+<view class="container">
+  <view class="header">
+    <text class="title">隐私设置</text>
+  </view>
+  
+  <view class="privacy-content">
+    <!-- 个人信息保护 -->
+    <view class="section">
+      <view class="section-title">个人信息保护</view>
+      <view class="setting-item">
+        <text class="setting-label">公开我的昵称</text>
+        <switch checked="{{showNickname}}" bindchange="toggleShowNickname" color="#00662c"></switch>
+      </view>
+      <view class="setting-item">
+        <text class="setting-label">公开我的头像</text>
+        <switch checked="{{showAvatar}}" bindchange="toggleShowAvatar" color="#00662c"></switch>
+      </view>
+      <view class="setting-item">
+        <text class="setting-label">允许他人查看我的竞拍记录</text>
+        <switch checked="{{showBids}}" bindchange="toggleShowBids" color="#00662c"></switch>
+      </view>
+    </view>
+    
+    <!-- 隐私声明 -->
+    <view class="section">
+      <view class="section-title">隐私声明</view>
+      <view class="privacy-item" bindtap="navigateToPrivacyPolicy">
+        <text class="privacy-label">隐私政策</text>
+        <image class="privacy-arrow" src="/assets/icons/arrow-right.png"></image>
+      </view>
+      <view class="privacy-item" bindtap="navigateToTerms">
+        <text class="privacy-label">用户协议</text>
+        <image class="privacy-arrow" src="/assets/icons/arrow-right.png"></image>
+      </view>
+    </view>
+    
+    <!-- 数据管理 -->
+    <view class="section">
+      <view class="section-title">数据管理</view>
+      <view class="data-item">
+        <text class="data-label">删除浏览记录</text>
+        <switch checked="{{autoDeleteHistory}}" bindchange="toggleAutoDeleteHistory" color="#00662c"></switch>
+      </view>
+      <view class="data-item">
+        <text class="data-label">清除所有数据</text>
+        <button class="clear-btn" type="warn" size="mini" bindtap="showClearDataConfirm">清除</button>
+      </view>
+    </view>
+    
+    <!-- 隐私提示 -->
+    <view class="privacy-hint">
+      <text>我们非常重视您的隐私保护，您可以随时调整上述设置来控制个人信息的可见性。</text>
+    </view>
+  </view>
+</view>

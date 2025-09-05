@@ -1,0 +1,186 @@
+/* deposit.wxss */
+.container {
+  padding: 0;
+  background-color: #f7f7f7;
+  min-height: 100vh;
+}
+
+.deposit-form {
+  padding: 40rpx 30rpx 120rpx;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 32rpx;
+  display: block;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin-bottom: 32rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.item-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.item-info:last-child {
+  border-bottom: none;
+}
+
+.item-label {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.item-value {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.price {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #ff4d4f;
+}
+
+.price-symbol {
+  font-size: 28rpx;
+  font-weight: normal;
+}
+
+.deposit-tip {
+  font-size: 26rpx;
+  color: #999;
+  line-height: 36rpx;
+  margin-bottom: 48rpx;
+  display: block;
+  text-align: justify;
+}
+
+.btn {
+  width: 100%;
+  height: 100rpx;
+  border-radius: 50rpx;
+  font-size: 32rpx;
+  line-height: 100rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-primary {
+  background-color: #00662c;
+  color: #fff;
+}
+
+.btn-primary:active {
+  background-color: #004d20;
+}
+
+/* 支付方式选择 */
+.payment-methods {
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 0 32rpx;
+  margin-bottom: 32rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.method-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.method-item:last-child {
+  border-bottom: none;
+}
+
+.method-info {
+  display: flex;
+  align-items: center;
+}
+
+.method-icon {
+  width: 56rpx;
+  height: 56rpx;
+  margin-right: 20rpx;
+}
+
+.method-name {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.selected-icon {
+  color: #00662c;
+}
+
+/* 拍卖品信息展示 */
+.auction-info {
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin-bottom: 32rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.auction-item {
+  display: flex;
+}
+
+.auction-image {
+  width: 180rpx;
+  height: 180rpx;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+  border-radius: 8rpx;
+  overflow: hidden;
+}
+
+.auction-image image {
+  width: 100%;
+  height: 100%;
+}
+
+.auction-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.auction-title {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 16rpx;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.auction-price {
+  font-size: 32rpx;
+  color: #ff4d4f;
+  font-weight: bold;
+  margin-bottom: 8rpx;
+}
+
+.auction-status {
+  font-size: 24rpx;
+  color: #00662c;
+}

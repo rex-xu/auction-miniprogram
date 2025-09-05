@@ -1,0 +1,40 @@
+<!-- auction-success.wxml -->
+<view class="container">
+  <view class="success-content">
+    <view class="success-icon">
+      <text>🎉</text>
+    </view>
+    
+    <text class="success-title">恭喜您竞拍成功！</text>
+    
+    <view class="card">
+      <view class="item-info">
+        <text class="item-label">拍卖品</text>
+        <text class="item-value">{{auctionItem.title || '加载中...'}}</text>
+      </view>
+      
+      <view class="item-info">
+        <text class="item-label">成交价格</text>
+        <text class="item-value price"><text class="price-symbol">¥</text>{{auctionItem.current_price || '0.00'}}</text>
+      </view>
+      
+      <view class="item-info">
+        <text class="item-label">保证金</text>
+        <text class="item-value"><text class="price-symbol">¥</text>{{auctionItem.deposit_amount || '0.00'}}</text>
+      </view>
+      
+      <view class="item-info">
+        <text class="item-label">待支付余额</text>
+        <text class="item-value price"><text class="price-symbol">¥</text>{{remainingAmount || '0.00'}}</text>
+      </view>
+    </view>
+    
+    <text class="success-tip">
+      温馨提示：请在24小时内完成支付，否则将视为违约，保证金将不予退还。
+    </text>
+    
+    <button class="btn btn-primary" bindtap="goToPayment">立即支付</button>
+    
+    <button class="btn btn-default" bindtap="navigateToMyBids">查看我的竞拍</button>
+  </view>
+</view>

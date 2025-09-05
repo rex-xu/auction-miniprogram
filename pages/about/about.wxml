@@ -1,0 +1,49 @@
+<!-- about.wxml -->
+<view class="container">
+  <view class="header">
+    <text class="title">关于我们</text>
+  </view>
+  
+  <view class="about-content">
+    <!-- 应用图标 -->
+    <view class="app-icon">
+      <image src="/assets/images/default-item.png"></image>
+    </view>
+    
+    <!-- 应用名称和版本 -->
+    <view class="app-info">
+      <text class="app-name">拍卖小程序</text>
+      <text class="app-version">v1.0.0</text>
+    </view>
+    
+    <!-- 功能介绍 -->
+    <view class="section">
+      <view class="section-title">功能介绍</view>
+      <text class="section-content">
+        拍卖小程序是一款专注于提供便捷拍卖服务的移动应用，用户可以浏览各类拍卖商品、参与竞拍、缴纳保证金、查看竞拍记录等功能。
+      </text>
+    </view>
+    
+    <!-- 联系我们 -->
+    <view class="section">
+      <view class="section-title">联系我们</view>
+      <view class="contact-item">
+        <text class="contact-label">客服电话：</text>
+        <text class="contact-value">400-123-4567</text>
+      </view>
+      <view class="contact-item">
+        <text class="contact-label">邮箱：</text>
+        <text class="contact-value">support@example.com</text>
+      </view>
+      <view class="contact-item">
+        <text class="contact-label">地址：</text>
+        <text class="contact-value">北京市海淀区科技园区</text>
+      </view>
+    </view>
+    
+    <!-- 版权信息 -->
+    <view class="copyright">
+      <text>© 2023 拍卖小程序 版权所有</text>
+    </view>
+  </view>
+</view>

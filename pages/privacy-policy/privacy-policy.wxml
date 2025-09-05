@@ -1,0 +1,89 @@
+<!-- privacy-policy.wxml -->
+<view class="container">
+  <view class="header">
+    <text class="title">隐私政策</text>
+  </view>
+  
+  <view class="policy-content">
+    <view class="policy-section">
+      <text class="section-title">一、引言</text>
+      <text class="section-content">
+        欢迎您使用我们的拍卖小程序（以下简称"本应用"）。本应用尊重并保护用户隐私，在您使用本应用时，我们会按照本隐私政策的规定收集、使用和保护您提供的个人信息。请您仔细阅读本隐私政策，了解我们的隐私保护实践。
+      </text>
+    </view>
+    
+    <view class="policy-section">
+      <text class="section-title">二、我们收集的信息</text>
+      <text class="section-content">
+        1. 您在注册或使用本应用时提供的个人信息，包括但不限于姓名、手机号、邮箱地址等。
+      </text>
+      <text class="section-content">
+        2. 您在使用本应用时产生的行为信息，包括但不限于浏览记录、竞拍记录、交易记录等。
+      </text>
+      <text class="section-content">
+        3. 设备信息，包括但不限于设备型号、操作系统版本、IP地址等。
+      </text>
+    </view>
+    
+    <view class="policy-section">
+      <text class="section-title">三、信息的使用</text>
+      <text class="section-content">
+        1. 提供、维护和改进本应用的服务。
+      </text>
+      <text class="section-content">
+        2. 处理您的注册、登录、竞拍、支付等请求。
+      </text>
+      <text class="section-content">
+        3. 向您发送有关本应用的通知、活动信息等。
+      </text>
+      <text class="section-content">
+        4. 进行用户行为分析，以改进我们的服务。
+      </text>
+    </view>
+    
+    <view class="policy-section">
+      <text class="section-title">四、信息的保护</text>
+      <text class="section-content">
+        我们采取各种安全措施保护您的个人信息，防止信息被未经授权的访问、使用、披露或修改。但请注意，互联网传输并非绝对安全的环境，我们无法保证信息在互联网传输过程中的绝对安全。
+      </text>
+    </view>
+    
+    <view class="policy-section">
+      <text class="section-title">五、信息的共享</text>
+      <text class="section-content">
+        我们不会向任何第三方出售、出租、交易或以其他方式转让您的个人信息，除非获得您的明确同意或法律要求。
+      </text>
+    </view>
+    
+    <view class="policy-section">
+      <text class="section-title">六、您的权利</text>
+      <text class="section-content">
+        您有权访问、更正、删除您的个人信息，也可以随时联系我们行使这些权利。
+      </text>
+    </view>
+    
+    <view class="policy-section">
+      <text class="section-title">七、政策的变更</text>
+      <text class="section-content">
+        我们可能会不时更新本隐私政策，更新后的政策将在本应用上公布。继续使用本应用将视为您接受更新后的隐私政策。
+      </text>
+    </view>
+    
+    <view class="policy-section">
+      <text class="section-title">八、联系我们</text>
+      <text class="section-content">
+        如您对本隐私政策有任何疑问，请通过以下方式联系我们：
+      </text>
+      <text class="section-content">
+        邮箱：support@example.com
+      </text>
+      <text class="section-content">
+        电话：400-123-4567
+      </text>
+    </view>
+    
+    <view class="policy-update">
+      <text>更新日期：2023年12月1日</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,83 @@
+/* index.wxss */
+.header {
+  margin-bottom: 30rpx;
+}
+
+.filter-tags {
+  display: flex;
+  margin-bottom: 24rpx;
+  padding: 0 4rpx;
+}
+
+.filter-tags .tag {
+  margin-right: 20rpx;
+}
+
+.auction-list {
+  padding-bottom: 100rpx;
+}
+
+.auction-item {
+  display: flex;
+  width: 100%;
+}
+
+.auction-image {
+  width: 200rpx;
+  height: 200rpx;
+  margin-right: 20rpx;
+  overflow: hidden;
+  border-radius: 12rpx;
+}
+
+.auction-image image {
+  width: 100%;
+  height: 100%;
+}
+
+.auction-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.auction-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 16rpx;
+  line-height: 40rpx;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.auction-meta {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.current-price {
+  color: #ff4d4f;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-right: 24rpx;
+}
+
+.bid-count {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.auction-status {
+  display: flex;
+  align-items: center;
+}
+
+.countdown {
+  margin-left: 16rpx;
+  font-size: 22rpx;
+}

@@ -1,0 +1,63 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/auction-detail/auction-detail",
+    "pages/my-bids/my-bids",
+    "pages/profile/profile",
+    "pages/login/login",
+    "pages/register/register",
+    "pages/deposit/deposit",
+    "pages/auction-success/auction-success",
+    "pages/my-deposits/my-deposits",
+    "pages/settings/settings",
+    "pages/auction-list/auction-list",
+    "pages/favorite/favorite",
+    "pages/article-detail/article-detail",
+    "pages/transaction-detail/transaction-detail",
+    "pages/terms/terms",
+    "pages/about/about",
+    "pages/account/account",
+    "pages/privacy/privacy",
+    "pages/privacy-policy/privacy-policy",
+    "pages/user/user",
+    "pages/transaction/transaction",
+    "pages/change-password/change-password",
+    "pages/logistics/logistics"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#333",
+    "navigationBarTitleText": "拍卖小程序",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#999",
+    "selectedColor": "#ff4d4f",
+    "backgroundColor": "#fff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "assets/icons/home.png",
+        "selectedIconPath": "assets/icons/home-active.png"
+      },
+      {
+        "pagePath": "pages/my-bids/my-bids",
+        "text": "我的竞拍",
+        "iconPath": "assets/icons/bid.png",
+        "selectedIconPath": "assets/icons/bid-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "assets/icons/user.png",
+        "selectedIconPath": "assets/icons/user-active.png"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2",
+  "useExtendedLib": {
+    "weui": true
+  }
+}

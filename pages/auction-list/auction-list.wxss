@@ -1,0 +1,257 @@
+/* auction-list.wxss */
+.container {
+  padding: 0;
+  background-color: #f7f7f7;
+  min-height: 100vh;
+}
+
+/* 搜索栏 */
+.search-bar {
+  padding: 20rpx 30rpx;
+  background-color: #fff;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.search-input {
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 40rpx;
+  padding: 0 30rpx;
+  height: 80rpx;
+}
+
+.search-input icon {
+  color: #999;
+  margin-right: 16rpx;
+}
+
+.search-input input {
+  flex: 1;
+  height: 100%;
+  font-size: 28rpx;
+  color: #333;
+  background-color: transparent;
+}
+
+/* 筛选栏 */
+.filter-bar {
+  background-color: #fff;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.filter-bar scroll-view {
+  display: flex;
+  white-space: nowrap;
+}
+
+.filter-item {
+  padding: 24rpx 40rpx;
+  font-size: 28rpx;
+  color: #666;
+  position: relative;
+}
+
+.filter-item.active {
+  color: #00662c;
+  font-weight: 500;
+}
+
+.filter-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40rpx;
+  height: 6rpx;
+  background-color: #00662c;
+  border-radius: 3rpx;
+}
+
+/* 分类栏 */
+.category-bar {
+  background-color: #fff;
+  margin-bottom: 20rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.category-bar scroll-view {
+  display: flex;
+  white-space: nowrap;
+}
+
+.category-item {
+  padding: 24rpx 40rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.category-item.active {
+  color: #00662c;
+  font-weight: 500;
+}
+
+/* 拍卖列表 */
+.auction-list {
+  padding: 0 30rpx 100rpx;
+}
+
+.auction-item {
+  display: flex;
+  background-color: #fff;
+  border-radius: 16rpx;
+  margin-bottom: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.item-image {
+  width: 240rpx;
+  height: 240rpx;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.item-image image {
+  width: 100%;
+  height: 100%;
+}
+
+.status-badge {
+  position: absolute;
+  top: 20rpx;
+  left: 20rpx;
+  padding: 6rpx 20rpx;
+  border-radius: 18rpx;
+  font-size: 24rpx;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.status-badge.ongoing {
+  background-color: #389e0d;
+}
+
+.status-badge.upcoming {
+  background-color: #096dd9;
+}
+
+.status-badge.ended {
+  background-color: #666;
+}
+
+.item-info {
+  flex: 1;
+  padding: 24rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.item-title {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #333;
+  line-height: 42rpx;
+  margin-bottom: 12rpx;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.item-desc {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 36rpx;
+  margin-bottom: 16rpx;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.item-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.current-price {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #ff4d4f;
+}
+
+.bid-count {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.item-time {
+  display: flex;
+  align-items: center;
+}
+
+.time-label {
+  font-size: 24rpx;
+  color: #666;
+  margin-right: 8rpx;
+}
+
+.time-value {
+  font-size: 24rpx;
+  color: #333;
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 120rpx 0;
+}
+
+.empty-image {
+  width: 240rpx;
+  height: 240rpx;
+  margin-bottom: 32rpx;
+  opacity: 0.5;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+}
+
+.empty-desc {
+  font-size: 26rpx;
+  color: #999;
+}
+
+/* 加载状态 */
+.loading-state {
+  text-align: center;
+  padding: 60rpx 0;
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* 加载更多 */
+.load-more {
+  text-align: center;
+  padding: 30rpx 0;
+}
+
+.load-more-text {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.load-more-text:active {
+  color: #00662c;
+}

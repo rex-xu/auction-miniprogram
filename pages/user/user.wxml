@@ -1,0 +1,96 @@
+<!-- user.wxml -->
+<view class="container">
+  <!-- 用户信息卡片 -->
+  <view class="user-card">
+    <view class="user-avatar">
+      <image src="{{userInfo.avatar_url || '/assets/images/default-avatar.png'}}" mode="aspectFill"></image>
+    </view>
+    <view class="user-info">
+      <text class="user-name">{{userInfo.nickname || '未登录'}}</text>
+      <text class="user-id">ID: {{userInfo.id || '-'}}</text>
+    </view>
+    <view class="user-action" bindtap="goToLogin" wx:if="!isLoggedIn">
+      <text>登录 / 注册</text>
+      <icon type="right" size="16" color="#999"></icon>
+    </view>
+  </view>
+  
+  <!-- 功能列表 -->
+  <view class="feature-section">
+    <text class="section-title">我的竞拍</text>
+    <view class="feature-grid">
+      <view class="feature-item" bindtap="goToMyBids">
+        <view class="feature-icon">
+          <image src="/assets/images/my-bids.png" mode="aspectFit"></image>
+        </view>
+        <text class="feature-name">我的出价</text>
+        <text class="feature-count" wx:if="myBidsCount > 0">{{myBidsCount}}</text>
+      </view>
+      <view class="feature-item" bindtap="goToMyWins">
+        <view class="feature-icon">
+          <image src="/assets/images/my-wins.png" mode="aspectFit"></image>
+        </view>
+        <text class="feature-name">我拍的</text>
+        <text class="feature-count" wx:if="myWinsCount > 0">{{myWinsCount}}</text>
+      </view>
+      <view class="feature-item" bindtap="goToMyDeposits">
+        <view class="feature-icon">
+          <image src="/assets/images/my-deposits.png" mode="aspectFit"></image>
+        </view>
+        <text class="feature-name">我的保证金</text>
+      </view>
+      <view class="feature-item" bindtap="goToTransactionRecords">
+        <view class="feature-icon">
+          <image src="/assets/images/transactions.png" mode="aspectFit"></image>
+        </view>
+        <text class="feature-name">交易记录</text>
+      </view>
+    </view>
+  </view>
+  
+  <view class="feature-section">
+    <text class="section-title">我的收藏</text>
+    <view class="feature-grid">
+      <view class="feature-item" bindtap="goToFavorites">
+        <view class="feature-icon">
+          <image src="/assets/images/favorites.png" mode="aspectFit"></image>
+        </view>
+        <text class="feature-name">我的收藏</text>
+        <text class="feature-count" wx:if="favoritesCount > 0">{{favoritesCount}}</text>
+      </view>
+      <view class="feature-item" bindtap="goToViewed">
+        <view class="feature-icon">
+          <image src="/assets/images/viewed.png" mode="aspectFit"></image>
+        </view>
+        <text class="feature-name">浏览历史</text>
+      </view>
+    </view>
+  </view>
+  
+  <view class="feature-section">
+    <text class="section-title">系统设置</text>
+    <view class="feature-list">
+      <view class="feature-row" bindtap="goToTerms">
+        <text class="feature-text">用户协议</text>
+        <icon type="right" size="16" color="#999"></icon>
+      </view>
+      <view class="feature-row" bindtap="goToPrivacy">
+        <text class="feature-text">隐私政策</text>
+        <icon type="right" size="16" color="#999"></icon>
+      </view>
+      <view class="feature-row" bindtap="goToAbout">
+        <text class="feature-text">关于我们</text>
+        <icon type="right" size="16" color="#999"></icon>
+      </view>
+      <view class="feature-row" bindtap="goToContact">
+        <text class="feature-text">联系客服</text>
+        <icon type="right" size="16" color="#999"></icon>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 退出登录按钮 -->
+  <view class="logout-section" wx:if="isLoggedIn">
+    <button class="btn-logout" bindtap="logout">退出登录</button>
+  </view>
+</view>

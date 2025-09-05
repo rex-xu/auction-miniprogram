@@ -1,0 +1,45 @@
+<!-- my-deposits.wxml -->
+<view class="container">
+  <view class="header">
+    <text class="title">我的保证金</text>
+  </view>
+  
+  <!-- 筛选标签 -->
+  <view class="filter-tags">
+    <view class="tag {{activeTab === 'all' ? 'tag-active' : ''}}" bindtap="switchTab" data-tab="all">全部</view>
+    <view class="tag {{activeTab === 'paid' ? 'tag-active' : ''}}" bindtap="switchTab" data-tab="paid">已缴纳</view>
+    <view class="tag {{activeTab === 'refunded' ? 'tag-active' : ''}}" bindtap="switchTab" data-tab="refunded">已退还</view>
+  </view>
+  
+  <!-- 保证金记录列表 -->
+  <view class="deposits-list">
+    <block wx:if="deposits.length > 0">
+      <view wx:for="{{deposits}}" wx:key="id" class="card">
+        <view class="deposit-item">
+          <view class="deposit-image">
+            <image src="{{item.auction_item.image_url || '/assets/images/default-item.png'}}" mode="aspectFill"></image>
+          </view>
+          <view class="deposit-info">
+            <view class="deposit-title">{{item.auction_item.title}}</view>
+            <view class="deposit-meta">
+              <text class="deposit-amount"><text class="price-symbol">¥</text>{{item.amount}}</text>
+              <text class="deposit-status">{{getStatusText(item.status)}}</text>
+            </view>
+            <view class="deposit-time">
+              <text>缴纳时间：{{formatDateTime(item.created_at)}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+    <view wx:else class="empty-state">
+      <image class="empty-icon" src="/assets/images/empty.png"></image>
+      <text class="empty-text">暂无保证金记录</text>
+    </view>
+  </view>
+  
+  <!-- 加载更多 -->
+  <view class="load-more" wx:if="hasMore" bindtap="loadMore">
+    <text>上拉加载更多</text>
+  </view>
+</view>

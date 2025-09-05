@@ -1,0 +1,38 @@
+/* privacy-policy.wxss */
+.container {
+  padding: 0 30rpx;
+  padding-bottom: 100rpx;
+}
+
+.policy-content {
+  width: 100%;
+}
+
+.policy-section {
+  margin-bottom: 40rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+  display: block;
+}
+
+.section-content {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 44rpx;
+  margin-bottom: 16rpx;
+  display: block;
+}
+
+.policy-update {
+  margin-top: 60rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #f0f0f0;
+  text-align: center;
+  font-size: 24rpx;
+  color: #999;
+}
