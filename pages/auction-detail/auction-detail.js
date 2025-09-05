@@ -39,38 +39,43 @@ Page({
     }
   },
 
-  // 加载拍卖详情
-  loadAuctionDetail() {
-    app.request({
-      url: `${app.globalData.baseUrl}/auction-items/${this.data.itemId}/`,
-      success: (res) => {
-        const now = Date.now();
-        const endTime = new Date(res.end_time).getTime();
-        res.remaining_time = Math.max(0, endTime - now);
-        
-        // 生成快速出价选项
-        const currentPrice = parseFloat(res.current_price);
-        const increment = parseFloat(res.bid_increment);
-        const quickBids = [
-          currentPrice + increment,
-          currentPrice + increment * 2,
-          currentPrice + increment * 3
-        ].map(price => price.toFixed(2));
-        
-        this.setData({
-          auctionItem: res,
-          quickBidOptions: quickBids,
-          bidPrice: (currentPrice + increment).toFixed(2)
-        });
-      },
-      fail: () => {
-        wx.showToast({
-          title: '加载失败，请重试',
-          icon: 'none'
-        });
-        wx.navigateBack();
-      }
-    });
+  // 加载拍卖详情 - 使用async/await语法优化异步请求处理
+  async loadAuctionDetail() {
+    try {
+      const res = await app.request({
+        url: `${app.globalData.baseUrl}/auction-items/${this.data.itemId}/`
+      });
+      
+      // 后端返回的数据格式为 {code: 0, message: 'success', data: {...}}
+      // 所以需要使用res.data作为auctionItem数据
+      const auctionItemData = res.data;
+      console.log("auctionItemData : ", auctionItemData);
+      const now = Date.now();
+      const endTime = new Date(auctionItemData.end_time).getTime();
+      auctionItemData.remaining_time = Math.max(0, endTime - now);
+      
+      // 生成快速出价选项
+      const currentPrice = parseFloat(auctionItemData.current_price);
+      const increment = parseFloat(auctionItemData.bid_increment);
+      const quickBids = [
+        currentPrice + increment,
+        currentPrice + increment * 2,
+        currentPrice + increment * 3
+      ].map(price => price.toFixed(2));
+      
+      this.setData({
+        auctionItem: auctionItemData,
+        quickBidOptions: quickBids,
+        bidPrice: (currentPrice + increment).toFixed(2)
+      });
+    } catch (error) {
+      console.error('加载拍卖详情失败:', error);
+      wx.showToast({
+        title: '加载失败，请重试',
+        icon: 'none'
+      });
+      wx.navigateBack();
+    }
   },
 
   // 检查保证金状态
@@ -101,7 +106,9 @@ Page({
         page_size: 20
       },
       success: (res) => {
-        this.setData({ bidHistory: res.results || [] });
+        // 确保使用正确的数据格式，后端返回的数据可能在res.data中
+        const bidData = res.data || res;
+        this.setData({ bidHistory: bidData.results || [] });
       }
     });
   },
