@@ -181,7 +181,7 @@ App({
   async submitBid(auctionItemId, price) {
     try {
       const res = await this.request({
-        url: `${this.globalData.baseUrl}/bids/`,
+        url: `${this.globalData.baseUrl}/bid-records/`,
         method: 'POST',
         data: {
           auction_item: auctionItemId,

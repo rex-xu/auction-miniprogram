@@ -14,6 +14,14 @@ Page({
     this.loadTransactionDetail();
   },
 
+  // 处理拍卖品数据，添加预处理字段
+  processAuctionItem(item) {
+    return {
+      ...item,
+      display_image_url: item.image_url || '/assets/images/default-item.png'
+    };
+  },
+
   // 加载交易详情
   loadTransactionDetail() {
     this.setData({ loading: true });
@@ -22,8 +30,30 @@ Page({
       url: `${app.globalData.baseUrl}/transactions/${this.transactionId}/`,
       method: 'GET',
       success: (res) => {
+        // 处理拍卖品数据
+        if (res.auction_item) {
+          res.auction_item = this.processAuctionItem(res.auction_item);
+        }
+        
+        // 为交易详情预先计算状态信息和格式化日期时间
+        const transactionWithFormattedData = {
+          ...res,
+          status_icon: this.getStatusIcon(res.status),
+          status_text: this.getStatusText(res.status),
+          status_desc: this.getStatusDesc(res.status),
+          formatted_created_at: this.formatDateTime(res.created_at)
+        };
+        
+        // 如果有支付时间和退款时间，也格式化
+        if (res.paid_at) {
+          transactionWithFormattedData.formatted_paid_at = this.formatDateTime(res.paid_at);
+        }
+        if (res.refunded_at) {
+          transactionWithFormattedData.formatted_refunded_at = this.formatDateTime(res.refunded_at);
+        }
+        
         this.setData({
-          transaction: res,
+          transaction: transactionWithFormattedData,
           loading: false
         });
       },

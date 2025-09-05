@@ -7,9 +7,9 @@
   
   <!-- 筛选标签 -->
   <view class="filter-tags">
-    <view class="tag {{activeTab === 'all' ? 'tag-active' : ''}}" bindtap="switchTab" data-tab="all">全部</view>
-    <view class="tag {{activeTab === 'ongoing' ? 'tag-active' : ''}}" bindtap="switchTab" data-tab="ongoing">进行中</view>
-    <view class="tag {{activeTab === 'upcoming' ? 'tag-active' : ''}}" bindtap="switchTab" data-tab="upcoming">即将开始</view>
+    <view class="tag {{activeTags.all}}" bindtap="switchTab" data-tab="all">全部</view>
+    <view class="tag {{activeTags.ongoing}}" bindtap="switchTab" data-tab="ongoing">进行中</view>
+    <view class="tag {{activeTags.upcoming}}" bindtap="switchTab" data-tab="upcoming">即将开始</view>
   </view>
   
   <!-- 拍卖项目列表 -->
@@ -18,7 +18,7 @@
       <view wx:for="{{auctionItems}}" wx:key="id" class="card" bindtap="navigateToDetail" data-id="{{item.id}}">
         <view class="auction-item">
           <view class="auction-image">
-            <image src="{{item.image_url || '/assets/images/default-item.png'}}" mode="aspectFill"></image>
+            <image src="{{item.display_image_url}}" mode="aspectFill"></image>
           </view>
           <view class="auction-info">
             <view class="auction-title">{{item.title}}</view>
@@ -27,12 +27,18 @@
               <text class="bid-count">{{item.bid_count}}次出价</text>
             </view>
             <view class="auction-status">
-              <text class="tag {{getStatusClass(item.status)}}">{{getStatusText(item.status)}}</text>
-              <view class="countdown" wx:if="{{item.status === 'in_progress'}}">
+              <text class="tag {{item.status_class}}">{{item.status_text}}</text>
+              <view class="countdown" wx:if="{{item.show_ongoing_countdown}}">
                 剩余: 
-                <text class="countdown-item">{{formatTime(item.remaining_time, 'hours')}}</text>:
-                <text class="countdown-item">{{formatTime(item.remaining_time, 'minutes')}}</text>:
-                <text class="countdown-item">{{formatTime(item.remaining_time, 'seconds')}}</text>
+                <text class="countdown-item">{{item.formatted_hours}}</text>:
+                <text class="countdown-item">{{item.formatted_minutes}}</text>:
+                <text class="countdown-item">{{item.formatted_seconds}}</text>
+              </view>
+              <view class="countdown" wx:elif="{{item.show_upcoming_countdown}}">
+                即将开始: 
+                <text class="countdown-item">{{item.formatted_hours}}</text>:
+                <text class="countdown-item">{{item.formatted_minutes}}</text>:
+                <text class="countdown-item">{{item.formatted_seconds}}</text>
               </view>
             </view>
           </view>

@@ -27,8 +27,20 @@ Page({
       url: `${app.globalData.baseUrl}/users/profile/`,
       method: 'GET',
       success: (res) => {
+        // 预先计算格式化的注册时间
+        const userInfo = res;
+        if (userInfo.created_at) {
+          userInfo.formatted_created_at = this.formatDateTime(userInfo.created_at);
+        }
+        
+        // 预先计算默认值
+        userInfo.display_nickname = userInfo.nickname || '未设置';
+        userInfo.display_phone = userInfo.phone || '未绑定';
+        userInfo.display_avatar = userInfo.avatar || '/assets/images/default-avatar.png';
+        userInfo.phone_status = userInfo.phone ? '已绑定' : '未绑定';
+        
         this.setData({
-          userInfo: res
+          userInfo: userInfo
         });
       },
       fail: () => {

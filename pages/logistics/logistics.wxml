@@ -41,7 +41,7 @@
       <block wx:for="{{logisticsInfo.traces}}" wx:key="index">
         <view class="timeline-item">
           <view class="timeline-line"></view>
-          <view class="timeline-dot {{index === 0 ? 'active' : ''}}"></view>
+          <view class="timeline-dot {{item.isActive ? 'active' : ''}}"></view>
           <view class="timeline-content">
             <text class="timeline-text">{{item.description}}</text>
             <text class="timeline-time">{{item.time}}</text>

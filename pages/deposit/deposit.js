@@ -19,13 +19,23 @@ Page({
     }
   },
 
+  // 处理拍卖品数据，添加预处理字段
+  processAuctionItem(item) {
+    return {
+      ...item,
+      display_title: item.title || '加载中...',
+      display_deposit_amount: item.deposit_amount || '0.00'
+    };
+  },
+
   // 加载拍卖详情
   loadAuctionDetail() {
     app.request({
       url: `${app.globalData.baseUrl}/auction-items/${this.data.itemId}/`,
       success: (res) => {
+        const processedItem = this.processAuctionItem(res);
         this.setData({
-          auctionItem: res,
+          auctionItem: processedItem,
           amount: parseFloat(res.deposit_amount)
         });
       },

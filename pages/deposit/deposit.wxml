@@ -6,12 +6,12 @@
     <view class="card">
       <view class="item-info">
         <text class="item-label">拍卖品</text>
-        <text class="item-value">{{auctionItem.title || '加载中...'}}</text>
+        <text class="item-value">{{auctionItem.display_title}}</text>
       </view>
       
       <view class="item-info">
         <text class="item-label">保证金金额</text>
-        <text class="item-value price"><text class="price-symbol">¥</text>{{auctionItem.deposit_amount || '0.00'}}</text>
+        <text class="item-value price"><text class="price-symbol">¥</text>{{auctionItem.display_deposit_amount}}</text>
       </view>
     </view>
     

@@ -6,10 +6,10 @@
   
   <!-- 筛选标签 -->
   <view class="filter-tags">
-    <view class="tag {{activeTab === 'all' ? 'tag-active' : ''}}" bindtap="switchTab" data-tab="all">全部</view>
-    <view class="tag {{activeTab === 'paid' ? 'tag-active' : ''}}" bindtap="switchTab" data-tab="paid">已支付</view>
-    <view class="tag {{activeTab === 'unpaid' ? 'tag-active' : ''}}" bindtap="switchTab" data-tab="unpaid">待支付</view>
-    <view class="tag {{activeTab === 'refunded' ? 'tag-active' : ''}}" bindtap="switchTab" data-tab="refunded">已退款</view>
+    <view class="tag {{activeTags.all}}" bindtap="switchTab" data-tab="all">全部</view>
+    <view class="tag {{activeTags.paid}}" bindtap="switchTab" data-tab="paid">已支付</view>
+    <view class="tag {{activeTags.unpaid}}" bindtap="switchTab" data-tab="unpaid">待支付</view>
+    <view class="tag {{activeTags.refunded}}" bindtap="switchTab" data-tab="refunded">已退款</view>
   </view>
   
   <!-- 交易记录列表 -->
@@ -18,16 +18,16 @@
       <view wx:for="{{transactions}}" wx:key="id" class="card" bindtap="viewTransactionDetail" data-id="{{item.id}}">
         <view class="transaction-item">
           <view class="transaction-image">
-            <image src="{{item.auction_item.image_url || '/assets/images/default-item.png'}}" mode="aspectFill"></image>
+            <image src="{{item.auction_item.display_image_url}}" mode="aspectFill"></image>
           </view>
           <view class="transaction-info">
             <view class="transaction-title">{{item.auction_item.title}}</view>
             <view class="transaction-meta">
               <text class="transaction-amount"><text class="price-symbol">¥</text>{{item.total_amount}}</text>
-              <text class="transaction-status">{{getStatusText(item.status)}}</text>
+              <text class="transaction-status">{{item.status_text}}</text>
             </view>
             <view class="transaction-time">
-              <text>成交时间：{{formatDateTime(item.created_at)}}</text>
+              <text>成交时间：{{item.formatted_created_at}}</text>
             </view>
           </view>
           <view class="transaction-action" wx:if="{{item.status === 'unpaid'}}">

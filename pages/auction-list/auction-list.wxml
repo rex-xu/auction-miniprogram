@@ -34,7 +34,7 @@
       <view class="auction-item" wx:for="{{auctionItems}}" wx:key="id" bindtap="viewDetail" data-id="{{item.id}}">
         <view class="item-image">
           <image src="{{item.image_url || '/assets/images/default-item.png'}}" mode="aspectFill"></image>
-          <view class="status-badge {{item.status}}">{{getStatusText(item.status)}}</view>
+          <view class="status-badge {{item.status}}">{{item.status_text}}</view>
         </view>
         <view class="item-info">
           <view class="item-title">{{item.title}}</view>

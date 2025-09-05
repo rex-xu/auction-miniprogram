@@ -19,18 +19,40 @@ Page({
 
   // 重置数据
   resetData() {
+    const activeTags = this.processActiveTags(this.data.activeTab);
     this.setData({
       favorites: [],
       page: 1,
-      hasMore: true
+      hasMore: true,
+      activeTags: activeTags
     });
+  },
+
+  // 处理激活标签状态
+  processActiveTags(activeTab) {
+    return {
+      all: activeTab === 'all' ? 'active' : '',
+      auction: activeTab === 'auction' ? 'active' : '',
+      article: activeTab === 'article' ? 'active' : ''
+    };
+  },
+
+  // 处理拍卖品图片URL
+  processAuctionImageUrl(auctionItem) {
+    if (!auctionItem) return auctionItem;
+    return {
+      ...auctionItem,
+      display_image_url: auctionItem.image_url || '/assets/images/default-item.png'
+    };
   },
 
   // 切换标签
   switchTab(e) {
     const tab = e.currentTarget.dataset.tab;
+    const activeTags = this.processActiveTags(tab);
     this.setData({
-      activeTab: tab
+      activeTab: tab,
+      activeTags: activeTags
     });
     this.resetData();
     this.loadFavorites();
@@ -58,7 +80,30 @@ Page({
       data: params,
       success: (res) => {
         const newFavorites = res.results || [];
-        const allFavorites = [...this.data.favorites, ...newFavorites];
+        
+        // 对收藏的数据进行预处理
+        const processedFavorites = newFavorites.map(item => {
+          // 处理文章的格式化日期
+          if (item.type === 'article' && item.article && item.article.created_at) {
+            return {
+              ...item,
+              article: {
+                ...item.article,
+                formatted_created_at: this.formatDate(item.article.created_at)
+              }
+            };
+          }
+          // 处理拍卖品的图片URL
+          else if (item.type === 'auction' && item.auction_item) {
+            return {
+              ...item,
+              auction_item: this.processAuctionImageUrl(item.auction_item)
+            };
+          }
+          return item;
+        });
+        
+        const allFavorites = [...this.data.favorites, ...processedFavorites];
         
         this.setData({
           favorites: allFavorites,

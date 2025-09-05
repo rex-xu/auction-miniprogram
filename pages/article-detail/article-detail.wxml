@@ -5,7 +5,7 @@
     <view class="article-title">{{article.title}}</view>
     <view class="article-meta">
       <text class="article-category">{{article.category.name}}</text>
-      <text class="article-time">{{formatDateTime(article.created_at)}}</text>
+      <text class="article-time">{{article.formatted_created_at}}</text>
       <text class="article-views">{{article.views}} 阅读</text>
     </view>
   </view>
@@ -32,7 +32,7 @@
           <view class="related-title">{{item.title}}</view>
           <view class="related-meta">
             <text class="related-category">{{item.category.name}}</text>
-            <text class="related-time">{{formatDate(item.created_at)}}</text>
+            <text class="related-time">{{item.formatted_created_at}}</text>
           </view>
         </view>
       </view>

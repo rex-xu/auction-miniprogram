@@ -31,6 +31,11 @@ Page({
         // 增加阅读量
         this.increaseViewCount();
         
+        // 预先计算格式化的日期时间
+        if (res.created_at) {
+          res.formatted_created_at = this.formatDateTime(res.created_at);
+        }
+        
         this.setData({
           article: res,
           loading: false
@@ -70,8 +75,19 @@ Page({
         limit: 5
       },
       success: (res) => {
+        // 对每条相关文章预先计算格式化日期
+        const processedRelatedArticles = (res.results || []).map(item => {
+          if (item.created_at) {
+            return {
+              ...item,
+              formatted_created_at: this.formatDate(item.created_at)
+            };
+          }
+          return item;
+        });
+        
         this.setData({
-          relatedArticles: res.results || []
+          relatedArticles: processedRelatedArticles
         });
       },
       fail: () => {

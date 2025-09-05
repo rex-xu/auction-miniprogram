@@ -6,10 +6,10 @@
   
   <!-- 筛选标签 -->
   <view class="filter-tags">
-    <view class="tag {{activeTab === 'all' ? 'tag-active' : ''}}" bindtap="switchTab" data-tab="all">全部</view>
-    <view class="tag {{activeTab === 'ongoing' ? 'tag-active' : ''}}" bindtap="switchTab" data-tab="ongoing">进行中</view>
-    <view class="tag {{activeTab === 'won' ? 'tag-active' : ''}}" bindtap="switchTab" data-tab="won">已中标</view>
-    <view class="tag {{activeTab === 'lost' ? 'tag-active' : ''}}" bindtap="switchTab" data-tab="lost">未中标</view>
+    <view class="tag {{activeTags.all}}" bindtap="switchTab" data-tab="all">全部</view>
+    <view class="tag {{activeTags.ongoing}}" bindtap="switchTab" data-tab="ongoing">进行中</view>
+    <view class="tag {{activeTags.won}}" bindtap="switchTab" data-tab="won">已中标</view>
+    <view class="tag {{activeTags.lost}}" bindtap="switchTab" data-tab="lost">未中标</view>
   </view>
   
   <!-- 竞拍记录列表 -->
@@ -18,13 +18,13 @@
       <view wx:for="{{bids}}" wx:key="id" class="card" bindtap="navigateToDetail" data-id="{{item.auction_item.id}}">
         <view class="bid-item">
           <view class="bid-image">
-            <image src="{{item.auction_item.image_url || '/assets/images/default-item.png'}}" mode="aspectFill"></image>
+            <image src="{{item.auction_item.display_image_url}}" mode="aspectFill"></image>
           </view>
           <view class="bid-info">
             <view class="bid-title">{{item.auction_item.title}}</view>
             <view class="bid-meta">
               <text class="bid-price"><text class="price-symbol">我的出价:¥</text>{{item.price}}</text>
-              <text wx:if="{{item.auction_item.current_price > item.price}}" class="current-highest">
+              <text wx:if="{{item.is_not_highest}}" class="current-highest">
                 当前最高价:¥{{item.auction_item.current_price}}
               </text>
               <text wx:else class="i-am-highest">
@@ -32,7 +32,7 @@
               </text>
             </view>
             <view class="bid-status">
-              <text class="tag {{getBidStatusClass(item.auction_item.status, item.price, item.auction_item.current_price)}}">{{getBidStatusText(item.auction_item.status, item.price, item.auction_item.current_price)}}</text>
+              <text class="tag {{item.bid_status_class}}">{{item.bid_status_text}}</text>
             </view>
           </view>
         </view>

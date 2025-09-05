@@ -6,22 +6,38 @@ Page({
     oldPassword: '',
     newPassword: '',
     confirmPassword: '',
-    loading: false
+    loading: false,
+    buttonDisabled: true
+  },
+
+  onLoad() {
+    // 初始加载时计算按钮状态
+    this.updateButtonState();
   },
 
   // 输入旧密码
   onOldPasswordInput(e) {
     this.setData({ oldPassword: e.detail.value });
+    this.updateButtonState();
   },
 
   // 输入新密码
   onNewPasswordInput(e) {
     this.setData({ newPassword: e.detail.value });
+    this.updateButtonState();
   },
 
   // 确认新密码
   onConfirmPasswordInput(e) {
     this.setData({ confirmPassword: e.detail.value });
+    this.updateButtonState();
+  },
+
+  // 更新按钮状态
+  updateButtonState() {
+    const { oldPassword, newPassword, confirmPassword, loading } = this.data;
+    const buttonDisabled = loading || !oldPassword || !newPassword || !confirmPassword;
+    this.setData({ buttonDisabled });
   },
 
   // 修改密码
@@ -123,5 +139,7 @@ Page({
     } else if (type === 'confirm') {
       this.setData({ confirmPassword: '' });
     }
+    // 清除输入后更新按钮状态
+    this.updateButtonState();
   }
 });

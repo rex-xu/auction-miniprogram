@@ -13,19 +13,42 @@ Page({
 
   onShow() {
     // 每次显示页面都重新加载数据
+    const activeTags = this.processActiveTags(this.data.activeTab);
     this.setData({
       transactions: [],
       page: 1,
-      hasMore: true
+      hasMore: true,
+      activeTags: activeTags
     });
     this.loadTransactions();
+  },
+
+  // 处理激活标签状态
+  processActiveTags(activeTab) {
+    return {
+      all: activeTab === 'all' ? 'tag-active' : '',
+      paid: activeTab === 'paid' ? 'tag-active' : '',
+      unpaid: activeTab === 'unpaid' ? 'tag-active' : '',
+      refunded: activeTab === 'refunded' ? 'tag-active' : ''
+    };
+  },
+
+  // 处理拍卖品图片URL
+  processAuctionImageUrl(auctionItem) {
+    if (!auctionItem) return auctionItem;
+    return {
+      ...auctionItem,
+      display_image_url: auctionItem.image_url || '/assets/images/default-item.png'
+    };
   },
 
   // 切换标签页
   switchTab(e) {
     const tab = e.currentTarget.dataset.tab;
+    const activeTags = this.processActiveTags(tab);
     this.setData({
       activeTab: tab,
+      activeTags: activeTags,
       transactions: [],
       page: 1,
       hasMore: true
@@ -61,10 +84,26 @@ Page({
       },
       success: (res) => {
         const newTransactions = res.results || [];
+        
+        // 为每条交易记录预先计算状态文本、格式化日期时间和处理拍卖品图片URL
+        const processedTransactions = newTransactions.map(item => {
+          // 处理拍卖品图片URL
+          const processedAuctionItem = item.auction_item ? 
+            this.processAuctionImageUrl(item.auction_item) : 
+            null;
+          
+          return {
+            ...item,
+            auction_item: processedAuctionItem,
+            status_text: this.getStatusText(item.status),
+            formatted_created_at: this.formatDateTime(item.created_at)
+          };
+        });
+        
         const hasMore = newTransactions.length === this.data.pageSize;
         
         this.setData({
-          transactions: [...this.data.transactions, ...newTransactions],
+          transactions: [...this.data.transactions, ...processedTransactions],
           hasMore: hasMore,
           page: this.data.page + 1,
           loading: false

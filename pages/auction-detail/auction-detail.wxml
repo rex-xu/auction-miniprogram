@@ -2,7 +2,7 @@
 <view class="container">
   <!-- 拍卖品图片 -->
   <view class="item-image">
-    <image src="{{auctionItem.image_url || '/assets/images/default-item.png'}}" mode="aspectFill"></image>
+    <image src="{{auctionItem.display_image_url}}" mode="aspectFill"></image>
   </view>
   
   <!-- 拍卖品信息 -->
@@ -15,14 +15,20 @@
     
     <!-- 状态和倒计时 -->
     <view class="item-status">
-      <text class="tag {{getStatusClass(auctionItem.status)}}">{{getStatusText(auctionItem.status)}}</text>
-      <view class="countdown" wx:if="{{auctionItem.status === 'in_progress'}}">
-        剩余: 
-        <text class="countdown-item">{{formatTime(auctionItem.remaining_time, 'hours')}}</text>:
-        <text class="countdown-item">{{formatTime(auctionItem.remaining_time, 'minutes')}}</text>:
-        <text class="countdown-item">{{formatTime(auctionItem.remaining_time, 'seconds')}}</text>
+      <text class="tag {{auctionItem.status_class}}">{{auctionItem.status_text}}</text>
+      <view class="countdown" wx:if="{{auctionItem.show_ongoing_countdown}}">
+        距离结束: 
+        <text class="countdown-item">{{auctionItem.formatted_hours}}</text>:
+        <text class="countdown-item">{{auctionItem.formatted_minutes}}</text>:
+        <text class="countdown-item">{{auctionItem.formatted_seconds}}</text>
       </view>
-      <text wx:else class="time-info">{{auctionItem.start_time ? '开始时间: ' + formatDate(auctionItem.start_time) : ''}}</text>
+      <view class="countdown" wx:elif="{{auctionItem.show_upcoming_countdown}}">
+        距离开始: 
+        <text class="countdown-item">{{auctionItem.formatted_hours}}</text>:
+        <text class="countdown-item">{{auctionItem.formatted_minutes}}</text>:
+        <text class="countdown-item">{{auctionItem.formatted_seconds}}</text>
+      </view>
+      <text wx:else class="time-info">{{auctionItem.formatted_start_time ? '开始时间: ' + auctionItem.formatted_start_time : ''}}</text>
     </view>
     
     <!-- 保证金信息 -->
@@ -43,7 +49,7 @@
     <button class="btn btn-primary" bindtap="submitBid" 
             disabled="{{!canBid || !hasPaidDeposit}}" 
             loading="{{submittingBid}}">
-      {{!hasPaidDeposit ? '请先缴纳保证金' : (!canBid ? '无法出价' : '确认出价')}}
+      {{buttonText}}
     </button>
     <view wx:if="{{!hasPaidDeposit}}" class="deposit-tip">
       <text>您需要先缴纳保证金才能参与竞拍</text>
@@ -58,10 +64,10 @@
       <block wx:if="{{bidHistory.length > 0}}">
         <view wx:for="{{bidHistory}}" wx:key="id" class="bid-record">
           <view class="bid-info">
-            <text class="bidder">{{item.bidder.nickname || '匿名用户'}}</text>
+            <text class="bidder">{{item.display_bidder_name}}</text>
             <text class="bid-price"><text class="price-symbol">¥</text>{{item.price}}</text>
           </view>
-          <text class="bid-time">{{formatDateTime(item.created_at)}}</text>
+          <text class="bid-time">{{item.formatted_created_at}}</text>
         </view>
       </block>
       <view wx:else class="empty-state">
@@ -73,6 +79,6 @@
   <!-- 拍卖品详情 -->
   <view class="card">
     <text class="subtitle">商品详情</text>
-    <rich-text class="item-description" nodes="{{auctionItem.description || '暂无描述'}}"/>
+    <rich-text class="item-description" nodes="{{auctionItem.display_description}}"/>
   </view>
 </view>

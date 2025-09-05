@@ -65,10 +65,41 @@ Page({
       },
       success: (res) => {
         const newBids = res.results || [];
+        
+        // 对每条竞拍记录预先计算状态信息
+        const processedBids = newBids.map(item => {
+          if (item.auction_item) {
+            // 处理拍卖品数据
+            const processedAuctionItem = {
+              ...item.auction_item,
+              display_image_url: item.auction_item.image_url || '/assets/images/default-item.png'
+            };
+            
+            return {
+              ...item,
+              auction_item: processedAuctionItem,
+              bid_status_text: this.getBidStatusText(item.auction_item.status, item.price, item.auction_item.current_price),
+              bid_status_class: this.getBidStatusClass(item.auction_item.status, item.price, item.auction_item.current_price),
+              is_highest: item.price >= item.auction_item.current_price,
+              is_not_highest: item.price < item.auction_item.current_price
+            };
+          }
+          return item;
+        });
+        
+        // 预先计算标签页的活跃状态
+        const activeTags = {
+          all: this.data.activeTab === 'all' ? 'tag-active' : '',
+          ongoing: this.data.activeTab === 'ongoing' ? 'tag-active' : '',
+          won: this.data.activeTab === 'won' ? 'tag-active' : '',
+          lost: this.data.activeTab === 'lost' ? 'tag-active' : ''
+        };
+        
         const hasMore = newBids.length === this.data.pageSize;
         
         this.setData({
-          bids: [...this.data.bids, ...newBids],
+          bids: [...this.data.bids, ...processedBids],
+          activeTags: activeTags,
           hasMore: hasMore,
           page: this.data.page + 1,
           loading: false

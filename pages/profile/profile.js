@@ -12,13 +12,35 @@ Page({
     this.checkLoginStatus();
   },
 
+  // 处理用户信息，添加预处理字段
+  processUserInfo(userInfo) {
+    if (!userInfo) {
+      return {
+        display_avatar: '/assets/images/default-avatar.png',
+        display_nickname: '未登录',
+        display_phone: ''
+      };
+    }
+    
+    return {
+      ...userInfo,
+      display_avatar: userInfo.avatar || '/assets/images/default-avatar.png',
+      display_nickname: userInfo.nickname || '未登录',
+      display_phone: userInfo.phone || ''
+    };
+  },
+
   // 检查登录状态
   checkLoginStatus() {
     const userInfo = app.globalData.userInfo;
     const isLogin = !!userInfo;
     
+    // 处理用户信息
+    const processedUserInfo = this.processUserInfo(userInfo);
+    
     this.setData({
       userInfo: userInfo || {},
+      processedUserInfo: processedUserInfo,
       isLogin: isLogin
     });
   },

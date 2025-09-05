@@ -3,11 +3,11 @@
   <!-- 用户信息卡片 -->
   <view class="user-card">
     <view class="user-avatar">
-      <image src="{{userInfo.avatar_url || '/assets/images/default-avatar.png'}}" mode="aspectFill"></image>
+      <image src="{{processedUserInfo.display_avatar}}" mode="aspectFill"></image>
     </view>
     <view class="user-info">
-      <text class="user-name">{{userInfo.nickname || '未登录'}}</text>
-      <text class="user-id">ID: {{userInfo.id || '-'}}</text>
+      <text class="user-name">{{processedUserInfo.display_nickname}}</text>
+      <text class="user-id">ID: {{processedUserInfo.display_id}}</text>
     </view>
     <view class="user-action" bindtap="goToLogin" wx:if="{{!isLoggedIn}}">
       <text>登录 / 注册</text>

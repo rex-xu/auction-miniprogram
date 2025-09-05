@@ -74,12 +74,43 @@ Page({
       
       // 检查是否有分页数据
       if (res.code === 0 && res.data) {
-        const newItems = res.data.list || [];
+        let newItems = res.data.list || [];
         const pagination = res.data.pagination || {};
         const hasMore = pagination.has_next || false;
         
+        // 预处理每个拍卖项目
+        newItems = newItems.map(item => {
+          // 预处理状态文本和样式
+          const statusText = this.getStatusText(item.status);
+          const statusClass = this.getStatusClass(item.status);
+          
+          // 预处理图片URL
+          const displayImageUrl = item.image_url || '/assets/images/default-item.png';
+          
+          // 预处理倒计时显示条件
+          const showOngoingCountdown = item.status === 'in_progress';
+          const showUpcomingCountdown = item.status === 'pre_show' && item.remaining_time;
+          
+          return {
+            ...item,
+            status_text: statusText,
+            status_class: statusClass,
+            display_image_url: displayImageUrl,
+            show_ongoing_countdown: showOngoingCountdown,
+            show_upcoming_countdown: showUpcomingCountdown
+          };
+        });
+        
+        // 预处理标签页活跃状态
+        const activeTags = {
+          all: this.data.activeTab === 'all' ? 'tag-active' : '',
+          ongoing: this.data.activeTab === 'ongoing' ? 'tag-active' : '',
+          upcoming: this.data.activeTab === 'upcoming' ? 'tag-active' : ''
+        };
+        
         this.setData({
           auctionItems: [...this.data.auctionItems, ...newItems],
+          activeTags: activeTags,
           hasMore: hasMore,
           page: this.data.page + 1,
           loading: false
@@ -115,17 +146,51 @@ Page({
   updateCountdown() {
     const now = Date.now();
     const newItems = this.data.auctionItems.map(item => {
+      let remainingTime = 0;
+      let hours = '00';
+      let minutes = '00';
+      let seconds = '00';
+      
       if (item.status === 'in_progress' && item.end_time) {
         const endTime = new Date(item.end_time).getTime();
-        const remainingTime = Math.max(0, endTime - now);
-        return {
-          ...item,
-          remaining_time: remainingTime
-        };
+        remainingTime = Math.max(0, endTime - now);
+        // 预先计算并格式化时间
+        const formattedTime = this.calculateFormattedTime(remainingTime);
+        hours = formattedTime.hours;
+        minutes = formattedTime.minutes;
+        seconds = formattedTime.seconds;
       }
-      return item;
+      // 处理即将开始状态的项目
+      else if (item.status === 'pre_show' && item.start_time) {
+        const startTime = new Date(item.start_time).getTime();
+        remainingTime = Math.max(0, startTime - now);
+        // 预先计算并格式化时间
+        const formattedTime = this.calculateFormattedTime(remainingTime);
+        hours = formattedTime.hours;
+        minutes = formattedTime.minutes;
+        seconds = formattedTime.seconds;
+      }
+      
+      return {
+        ...item,
+        remaining_time: remainingTime,
+        formatted_hours: hours,
+        formatted_minutes: minutes,
+        formatted_seconds: seconds
+      };
     });
     this.setData({ auctionItems: newItems });
+  },
+  
+  // 计算格式化的时间（内部方法，不直接在WXML中使用）
+  calculateFormattedTime(milliseconds) {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    
+    const hours = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
+    const minutes = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+    const seconds = (totalSeconds % 60).toString().padStart(2, '0');
+    
+    return { hours, minutes, seconds };
   },
 
   // 获取状态文本

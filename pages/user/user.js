@@ -15,22 +15,48 @@ Page({
     this.checkLoginStatus();
   },
 
+  // 处理用户信息，添加预处理字段
+  processUserInfo(userInfo) {
+    if (!userInfo) {
+      return {
+        display_avatar: '/assets/images/default-avatar.png',
+        display_nickname: '未登录',
+        display_id: '-'
+      };
+    }
+    
+    return {
+      ...userInfo,
+      display_avatar: userInfo.avatar_url || '/assets/images/default-avatar.png',
+      display_nickname: userInfo.nickname || '未登录',
+      display_id: userInfo.id || '-'
+    };
+  },
+
   // 检查登录状态
   checkLoginStatus() {
     const token = wx.getStorageSync('token');
     const userInfo = wx.getStorageSync('userInfo');
     
     if (token && userInfo) {
+      // 处理用户信息
+      const processedUserInfo = this.processUserInfo(userInfo);
+      
       this.setData({
         isLoggedIn: true,
-        userInfo: userInfo
+        userInfo: userInfo,
+        processedUserInfo: processedUserInfo
       });
       // 加载用户数据
       this.loadUserStats();
     } else {
+      // 处理未登录状态下的用户信息
+      const processedUserInfo = this.processUserInfo(null);
+      
       this.setData({
         isLoggedIn: false,
         userInfo: {},
+        processedUserInfo: processedUserInfo,
         myBidsCount: 0,
         myWinsCount: 0,
         favoritesCount: 0

@@ -6,9 +6,9 @@
   
   <!-- 筛选标签 -->
   <view class="filter-tags">
-    <view class="tag {{activeTab === 'all' ? 'active' : ''}}" bindtap="switchTab" data-tab="all">全部</view>
-    <view class="tag {{activeTab === 'auction' ? 'active' : ''}}" bindtap="switchTab" data-tab="auction">拍卖商品</view>
-    <view class="tag {{activeTab === 'article' ? 'active' : ''}}" bindtap="switchTab" data-tab="article">藏品资讯</view>
+    <view class="tag {{activeTags.all}}" bindtap="switchTab" data-tab="all">全部</view>
+    <view class="tag {{activeTags.auction}}" bindtap="switchTab" data-tab="auction">拍卖商品</view>
+    <view class="tag {{activeTags.article}}" bindtap="switchTab" data-tab="article">藏品资讯</view>
   </view>
   
   <!-- 收藏列表 -->
@@ -18,7 +18,7 @@
         <!-- 收藏的拍卖商品 -->
         <view class="auction-item" wx:if="{{item.type === 'auction'}}">
           <view class="item-image">
-            <image src="{{item.auction_item.image_url || '/assets/images/default-item.png'}}" mode="aspectFill"></image>
+            <image src="{{item.auction_item.display_image_url}}" mode="aspectFill"></image>
           </view>
           <view class="item-info">
             <view class="item-title">{{item.auction_item.title}}</view>
@@ -42,7 +42,7 @@
             <view class="article-title">{{item.article.title}}</view>
             <view class="article-meta">
               <text class="article-category">{{item.article.category.name}}</text>
-              <text class="article-time">{{formatDate(item.article.created_at)}}</text>
+              <text class="article-time">{{item.article.formatted_created_at}}</text>
             </view>
           </view>
         </view>

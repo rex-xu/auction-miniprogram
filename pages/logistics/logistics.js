@@ -36,6 +36,14 @@ Page({
             return new Date(b.time) - new Date(a.time);
           });
           
+          // 预处理物流轨迹，添加激活状态标记
+          logisticsInfo.traces = logisticsInfo.traces.map((trace, index) => {
+            return {
+              ...trace,
+              isActive: index === 0
+            };
+          });
+          
           this.setData({
             logisticsInfo,
             noData: false
@@ -92,6 +100,14 @@ Page({
         }
       ]
     };
+    
+    // 预处理模拟物流轨迹，添加激活状态标记
+    mockData.traces = mockData.traces.map((trace, index) => {
+      return {
+        ...trace,
+        isActive: index === 0
+      };
+    });
     
     this.setData({
       logisticsInfo: mockData,

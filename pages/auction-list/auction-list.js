@@ -71,9 +71,13 @@ Page({
         const newItems = res.results || [];
         const allItems = [...this.data.auctionItems, ...newItems];
         
-        // 为进行中的拍卖品添加倒计时
+        // 为进行中的拍卖品添加倒计时，并为所有拍卖品预先计算状态文本
         const now = Date.now();
         newItems.forEach(item => {
+          // 计算状态文本
+          item.status_text = this.getStatusText(item.status);
+          
+          // 为进行中的拍卖品添加倒计时
           if (item.status === 'ongoing' && item.end_time) {
             const endTime = new Date(item.end_time).getTime();
             item.remaining_time = Math.max(0, endTime - now);

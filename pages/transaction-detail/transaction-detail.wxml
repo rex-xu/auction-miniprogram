@@ -6,9 +6,9 @@
   
   <!-- 交易状态 -->
   <view class="status-section {{transaction.status}}">
-    <view class="status-icon">{{getStatusIcon(transaction.status)}}</view>
-    <view class="status-text">{{getStatusText(transaction.status)}}</view>
-    <view class="status-desc">{{getStatusDesc(transaction.status)}}</view>
+    <view class="status-icon">{{transaction.status_icon}}</view>
+    <view class="status-text">{{transaction.status_text}}</view>
+    <view class="status-desc">{{transaction.status_desc}}</view>
   </view>
   
   <!-- 拍卖品信息 -->
@@ -16,7 +16,7 @@
     <view class="section-title">拍卖品信息</view>
     <view class="auction-item">
       <view class="auction-image">
-        <image src="{{transaction.auction_item.image_url || '/assets/images/default-item.png'}}" mode="aspectFill"></image>
+        <image src="{{transaction.auction_item.display_image_url}}" mode="aspectFill"></image>
       </view>
       <view class="auction-info">
         <view class="auction-title">{{transaction.auction_item.title}}</view>
@@ -45,15 +45,15 @@
     </view>
     <view class="info-item">
       <text class="info-label">创建时间：</text>
-      <text class="info-value">{{formatDateTime(transaction.created_at)}}</text>
+      <text class="info-value">{{transaction.formatted_created_at}}</text>
     </view>
     <view class="info-item" wx:if="{{transaction.paid_at}}">
       <text class="info-label">支付时间：</text>
-      <text class="info-value">{{formatDateTime(transaction.paid_at)}}</text>
+      <text class="info-value">{{transaction.formatted_paid_at}}</text>
     </view>
     <view class="info-item" wx:if="{{transaction.refunded_at}}">
       <text class="info-label">退款时间：</text>
-      <text class="info-value">{{formatDateTime(transaction.refunded_at)}}</text>
+      <text class="info-value">{{transaction.formatted_refunded_at}}</text>
     </view>
   </view>
   
