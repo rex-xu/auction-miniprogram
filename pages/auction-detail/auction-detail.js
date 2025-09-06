@@ -11,12 +11,19 @@ Page({
     canBid: true,
     submittingBid: false,
     itemId: null,
-    currentSwiperIndex: 0
+    currentSwiperIndex: 0,
+    isLoggedIn: false // 添加用于WXML模板的登录状态标记
   },
 
   onLoad(options) {
+
+    console.log(">>>>>> unload : ", app.globalData.token);
+
     if (options.id) {
-      this.setData({ itemId: options.id });
+      this.setData({ 
+        itemId: options.id,
+        isLoggedIn: !!app.globalData.token // 初始化登录状态
+      });
       this.loadAuctionDetail();
       this.loadBidHistory();
       
@@ -26,7 +33,6 @@ Page({
       }, 1000);
       
       // 只有登录后才检查保证金状态
-      const app = getApp();
       if (app.globalData.token) {
         this.checkDepositStatus();
       }
@@ -39,18 +45,105 @@ Page({
       clearInterval(this.timer);
     }
   },
+  
+  // 页面显示时触发（包括从登录页返回时）
+  onShow() {
+    console.log(">>>>>> onShow - Token in globalData:", app.globalData.token);
+    console.log(">>>>>> onShow - Token in storage:", wx.getStorageSync('token'));
+    console.log(">>>>>> onShow - Complete globalData:", app.globalData);
+    
+    // 更新登录状态
+    const isLoggedIn = !!app.globalData.token;
+    this.setData({ isLoggedIn });
+    
+    // 重新检查登录状态和保证金状态
+    if (isLoggedIn) {
+      this.checkDepositStatus();
+    } else {
+      // 用户未登录，设置为未缴纳保证金状态并禁用出价功能
+      this.setData({ 
+        hasPaidDeposit: false,
+        canBid: false 
+      });
+      this.updateButtonText();
+    }
+  },
+  
+  // 测试按钮：手动设置token
+  testTokenSetting() {
+    const testToken = 'test-token-' + Date.now();
+    console.log('>>>>>> 手动设置测试token:', testToken);
+    
+    // 设置到globalData
+    app.globalData.token = testToken;
+    app.globalData.userInfo = {id: 1, nickname: '测试用户'};
+    
+    // 设置到storage
+    wx.setStorageSync('token', testToken);
+    wx.setStorageSync('userInfo', {id: 1, nickname: '测试用户'});
+    
+    wx.showToast({
+      title: '已设置测试token',
+      icon: 'success'
+    });
+    
+    // 立即重新检查token状态
+    setTimeout(() => {
+      console.log('>>>>>> 测试设置后 - Token in globalData:', app.globalData.token);
+      console.log('>>>>>> 测试设置后 - Token in storage:', wx.getStorageSync('token'));
+      // 更新登录状态
+      this.setData({ isLoggedIn: !!app.globalData.token });
+    }, 100);
+  },
+  
+  // 测试按钮：清除token
+  clearToken() {
+    console.log('>>>>>> 清除所有token');
+    
+    // 清除globalData
+    app.globalData.token = null;
+    app.globalData.userInfo = null;
+    
+    // 清除storage
+    wx.removeStorageSync('token');
+    wx.removeStorageSync('userInfo');
+    
+    wx.showToast({
+      title: '已清除所有token',
+      icon: 'success'
+    });
+    
+    // 立即重新检查token状态
+    setTimeout(() => {
+      console.log('>>>>>> 清除后 - Token in globalData:', app.globalData.token);
+      console.log('>>>>>> 清除后 - Token in storage:', wx.getStorageSync('token'));
+      // 更新登录状态
+      this.setData({ isLoggedIn: !!app.globalData.token });
+    }, 100);
+  },
+  
+  // 测试按钮：重新加载页面
+  reloadPage() {
+    console.log('>>>>>> 重新加载页面');
+    wx.redirectTo({
+      url: `/pages/auction-detail/auction-detail?id=${this.data.itemId}`
+    });
+  },
 
   // 加载拍卖详情 - 使用async/await语法优化异步请求处理
   async loadAuctionDetail() {
     try {
-      const res = await app.request({
+      // 注意：app.request方法已经处理了后端统一响应格式，直接返回res.data.data部分
+      const auctionItemData = await app.request({
         url: `${app.globalData.baseUrl}/auction-items/${this.data.itemId}/`
       });
       
-      // 后端返回的数据格式为 {code: 0, message: 'success', data: {...}}
-      // 所以需要使用res.data作为auctionItem数据
-      const auctionItemData = res.data;
       console.log("auctionItemData : ", auctionItemData);
+      // 确保auctionItemData存在
+      if (!auctionItemData) {
+        throw new Error('获取拍卖详情失败：数据为空');
+      }
+      
       const now = Date.now();
       // 根据拍卖状态计算剩余时间
       if (auctionItemData.status === 'pre_show' && auctionItemData.start_time) {
@@ -95,7 +188,6 @@ Page({
 
   // 检查保证金状态
   checkDepositStatus() {
-    const app = getApp();
     const itemId = this.data.itemId;
     
     // 确保先将状态设置为未缴纳，避免初始状态显示错误
@@ -233,43 +325,42 @@ Page({
   },
   
   // 加载出价历史
-  loadBidHistory() {
-    app.request({
-      url: `${app.globalData.baseUrl}/bid-records/`,
-      data: {
-        auction_item: this.data.itemId,
-        ordering: '-created_at',
-        page_size: 20
-      },
-      success: (res) => {
-        // 确保使用正确的数据格式，后端返回的数据可能在res.data中
-        const bidData = res.data || res;
-        const bidHistory = bidData.results || [];
-        
-        // 预先计算每条出价记录的格式化时间和出价者昵称
-        const processedBidHistory = bidHistory.map(record => ({
-          ...record,
-          formatted_created_at: this.formatDateTime(record.created_at),
-          display_bidder_name: record.bidder?.nickname || '匿名用户'
-        }));
-        
-        this.setData({ bidHistory: processedBidHistory });
-      },
-      fail: (error) => {
-        console.error('加载出价历史失败:', error);
-        wx.showToast({
-          title: '加载出价历史失败',
-          icon: 'none'
-        });
-        // 设置空数组，确保UI不会显示错误数据
-        this.setData({ bidHistory: [] });
-      },
-      complete: () => {
-        // 请求完成后的清理操作可以在这里添加
-      }
-    });
+  async loadBidHistory() {
+    try {
+      // 注意：app.request方法已经处理了后端统一响应格式，直接返回res.data.data部分
+      const data = await app.request({
+        url: `${app.globalData.baseUrl}/bid-records/`,
+        data: {
+          auction_item: this.data.itemId,
+          ordering: '-created_at',
+          page_size: 20
+        }
+      });
+      
+      console.log('出价历史数据:', data);
+      
+      // 确保数据格式正确
+      const bidHistory = data.results || [];
+      
+      // 预先计算每条出价记录的格式化时间和出价者昵称
+      const processedBidHistory = bidHistory.map(record => ({
+        ...record,
+        formatted_created_at: this.formatDateTime(record.created_at),
+        display_bidder_name: record.bidder?.nickname || '匿名用户'
+      }));
+      
+      this.setData({ bidHistory: processedBidHistory });
+    } catch (error) {
+      console.error('加载出价历史失败:', error);
+      wx.showToast({
+        title: '加载出价历史失败',
+        icon: 'none'
+      });
+      // 设置空数组，确保UI不会显示错误数据
+      this.setData({ bidHistory: [] });
+    }
   },
-
+  
   // 更新倒计时
   updateCountdown() {
     // 处理进行中状态的项目
@@ -379,6 +470,7 @@ Page({
     
     this.setData({ submittingBid: true });
     
+    // 注意：app.submitBid的参数已经更新，第二个参数现在是bidAmount
     app.submitBid(this.data.itemId, this.data.bidPrice).then(() => {
       wx.showToast({
         title: '出价成功',

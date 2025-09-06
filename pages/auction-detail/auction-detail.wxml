@@ -60,14 +60,14 @@
     <text class="subtitle">当前出价</text>
     
     <!-- 未登录状态下的提示 -->
-    <view wx:if="{{!app.globalData.token}}" class="login-prompt">
+    <view wx:if="{{!isLoggedIn}}" class="login-prompt">
       <image class="login-icon" src="/assets/images/login.png"></image>
       <text class="login-text">请先登录后参与竞拍</text>
       <button class="btn btn-primary" bindtap="navigateToLogin" type="primary" size="mini">去登录</button>
     </view>
     
     <!-- 已登录状态下的出价功能 -->
-    <block wx:elif="{{app.globalData.token}}">
+    <block wx:elif="{{isLoggedIn}}">
       <input class="bid-input" type="number" placeholder="请输入出价金额" bindinput="onBidInput" value="{{bidPrice}}" />
       <view class="quick-bids">
         <text class="quick-bid" wx:for="{{quickBidOptions}}" wx:key="index" bindtap="onQuickBid" data-price="{{item}}">{{item}}</text>
@@ -107,5 +107,15 @@
   <view class="card">
     <text class="subtitle">商品详情</text>
     <rich-text class="item-description" nodes="{{auctionItem.display_description}}"/>
+  </view>
+  
+  <!-- 测试工具按钮组 -->
+  <view class="test-tools" style="margin: 20rpx; padding: 20rpx; background-color: #f5f5f5; border-radius: 10rpx;">
+    <view style="margin-bottom: 10rpx; font-size: 28rpx; color: #666;">测试工具:</view>
+    <view style="display: flex; flex-wrap: wrap; gap: 10rpx;">
+      <button type="primary" bindtap="testTokenSetting" size="mini" style="margin: 5rpx;">设置测试Token</button>
+      <button type="warn" bindtap="clearToken" size="mini" style="margin: 5rpx;">清除Token</button>
+      <button type="default" bindtap="reloadPage" size="mini" style="margin: 5rpx;">重新加载页面</button>
+    </view>
   </view>
 </view>

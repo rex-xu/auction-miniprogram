@@ -7,19 +7,21 @@
     
     <text class="title">欢迎登录拍卖小程序</text>
     
-    <view class="form-group">
-      <input class="input" type="number" placeholder="请输入手机号码" bindinput="onPhoneInput" value="{{phone}}" />
+    <view class="wechat-login-section">
+      <button class="wechat-login-btn" open-type="getUserInfo" bindtap="wechatLogin" loading="{{loading}}" hover-class="wechat-login-btn-hover">
+        <image class="wechat-icon" src="/assets/images/wechat.png"></image>
+        <text class="wechat-text">微信一键登录</text>
+      </button>
     </view>
     
-    <view class="form-group">
-      <input class="input" type="password" placeholder="请输入密码" bindinput="onPasswordInput" password="true" value="{{password}}" />
+    <view class="login-note">
+      <text>登录即表示您同意我们的</text>
     </view>
     
-    <button class="btn btn-primary" bindtap="login" loading="{{loading}}">登录</button>
-    
-    <view class="register-link">
-      <text>还没有账号？</text>
-      <text class="link" bindtap="navigateToRegister">立即注册</text>
+    <view class="login-agreement">
+      <text class="agreement-link" bindtap="viewAgreement">《用户协议》</text>
+      <text>和</text>
+      <text class="agreement-link" bindtap="viewPrivacy">《隐私政策》</text>
     </view>
   </view>
 </view>

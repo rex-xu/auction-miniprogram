@@ -66,7 +66,8 @@ Page({
     
     console.log("home request /auction-search/");
     try {
-      const res = await app.request({
+      // 注意：app.request方法已经处理了后端统一响应格式，直接返回res.data.data部分
+      const data = await app.request({
         url: `${app.globalData.baseUrl}/auction-search/`,
         data: {
           page: this.data.page,
@@ -75,10 +76,12 @@ Page({
         }
       });
       
-      // 检查是否有分页数据
-      if (res.code === 0 && res.data) {
-        let newItems = res.data.list || [];
-        const pagination = res.data.pagination || {};
+      console.log('首页请求返回数据:', data);
+      
+      // 现在data直接是后端返回的data部分，包含list和pagination
+      if (data && data.list) {
+        let newItems = data.list || [];
+        const pagination = data.pagination || {};
         const hasMore = pagination.has_next || false;
         
         // 预处理每个拍卖项目
