@@ -5,6 +5,11 @@ Page({
   data: {
     auctionItems: [],
     activeTab: 'all', // all, ongoing, upcoming
+    activeTags: {
+      all: 'tag-active',
+      ongoing: '',
+      upcoming: ''
+    },
     page: 1,
     pageSize: 10,
     hasMore: true,
@@ -70,8 +75,6 @@ Page({
         }
       });
       
-      console.log("home page success : ");
-      
       // 检查是否有分页数据
       if (res.code === 0 && res.data) {
         let newItems = res.data.list || [];
@@ -84,9 +87,19 @@ Page({
           const statusText = this.getStatusText(item.status);
           const statusClass = this.getStatusClass(item.status);
           
-          // 预处理图片URL
-          const displayImageUrl = item.image_url || '/assets/images/default-item.png';
-          
+          // 预处理图片URL - 从media数组中获取第一张图片或主要图片
+          let displayImageUrl = '/assets/images/default-item.png';
+          if (item.media && item.media.length > 0) {
+            // 优先找主要图片
+            const primaryMedia = item.media.find(media => media.is_primary === true);
+            if (primaryMedia) {
+              displayImageUrl = primaryMedia.file_url;
+            } else {
+              // 否则使用第一张图片
+              displayImageUrl = item.media[0].file_url;
+            }
+          }
+          console.log("home page image URL : " + displayImageUrl);
           // 预处理倒计时显示条件
           const showOngoingCountdown = item.status === 'in_progress';
           const showUpcomingCountdown = item.status === 'pre_show' && item.remaining_time;
@@ -132,6 +145,11 @@ Page({
   // 加载更多
   loadMore() {
     this.loadAuctionItems();
+  },
+
+  // 上拉到底部时触发加载更多
+  onReachBottom() {
+    this.loadMore();
   },
 
   // 跳转到详情页
