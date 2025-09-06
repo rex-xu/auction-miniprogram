@@ -22,7 +22,8 @@
     "pages/user/user",
     "pages/transaction/transaction",
     "pages/change-password/change-password",
-    "pages/logistics/logistics"
+    "pages/logistics/logistics",
+    "pages/edit-profile/edit-profile"
   ],
   "window": {
     "backgroundTextStyle": "light",

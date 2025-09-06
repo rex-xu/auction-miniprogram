@@ -14,9 +14,10 @@
         <image class="avatar" src="{{userInfo.display_avatar}}"></image>
       </view>
       </view>
-      <view class="info-item">
+      <view class="info-item" bindtap="navigateToEditProfile">
         <text class="info-label">昵称</text>
         <text class="info-value">{{userInfo.display_nickname}}</text>
+        <image class="setting-arrow" src="/assets/icons/arrow-right.png"></image>
       </view>
       <view class="info-item">
         <text class="info-label">手机号</text>

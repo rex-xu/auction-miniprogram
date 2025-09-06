@@ -23,8 +23,12 @@ Page({
 
   // 加载用户信息
   loadUserInfo() {
+    wx.showLoading({
+      title: '加载中',
+    });
+    
     app.request({
-      url: `${app.globalData.baseUrl}/users/profile/`,
+      url: `${app.globalData.baseUrl}/users/me/`, // 使用正确的me端点获取当前用户信息
       method: 'GET',
       success: (res) => {
         // 预先计算格式化的注册时间
@@ -33,17 +37,40 @@ Page({
           userInfo.formatted_created_at = this.formatDateTime(userInfo.created_at);
         }
         
-        // 预先计算默认值
+        // 预先设置默认值
         userInfo.display_nickname = userInfo.nickname || '未设置';
         userInfo.display_phone = userInfo.phone || '未绑定';
         userInfo.display_avatar = userInfo.avatar || '/assets/images/default-avatar.png';
         userInfo.phone_status = userInfo.phone ? '已绑定' : '未绑定';
         
-        this.setData({
-          userInfo: userInfo
+        // 然后获取用户详细资料（包含昵称）
+        app.request({
+          url: `${app.globalData.baseUrl}/user-profiles/`,
+          method: 'GET',
+          success: (profileRes) => {
+            // 查找当前用户的资料
+            const userProfile = profileRes.results.find(profile => profile.user === res.id);
+            if (userProfile && userProfile.nickname) {
+              // 如果在user-profiles中找到昵称，则更新display_nickname
+              userInfo.display_nickname = userProfile.nickname;
+            }
+            
+            this.setData({
+              userInfo: userInfo
+            });
+            wx.hideLoading();
+          },
+          fail: () => {
+            // 获取user-profiles失败时，仍使用基本信息
+            this.setData({
+              userInfo: userInfo
+            });
+            wx.hideLoading();
+          }
         });
       },
       fail: () => {
+        wx.hideLoading();
         wx.showToast({
           title: '加载用户信息失败',
           icon: 'none'
@@ -66,6 +93,13 @@ Page({
   navigateToChangePassword() {
     wx.navigateTo({
       url: '/pages/change-password/change-password'
+    });
+  },
+  
+  // 跳转到编辑个人资料页面
+  navigateToEditProfile() {
+    wx.navigateTo({
+      url: '/pages/edit-profile/edit-profile'
     });
   },
 

@@ -1,0 +1,24 @@
+<view class="container">
+  <view class="header">
+    <text class="title">编辑个人资料</text>
+  </view>
+  
+  <view class="form-container">
+    <!-- 昵称输入 -->
+    <view class="form-item">
+      <text class="form-label">昵称</text>
+      <input class="form-input" type="text" value="{{nickname}}" bindinput="onNicknameInput" placeholder="请输入昵称" maxlength="50" />
+      <text class="char-count">{{nickname.length}}/50</text>
+    </view>
+    
+    <!-- 个人简介 -->
+    <view class="form-item">
+      <text class="form-label">个人简介</text>
+      <textarea class="form-textarea" value="{{bio}}" bindinput="onBioInput" placeholder="请输入个人简介" maxlength="200" />
+      <text class="char-count">{{bio.length}}/200</text>
+    </view>
+    
+    <!-- 保存按钮 -->
+    <button class="save-btn" type="primary" bindtap="saveProfile" disabled="{{isSaving}}">{{isSaving ? '保存中...' : '保存'}}</button>
+  </view>
+</view>
