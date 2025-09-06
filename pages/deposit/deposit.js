@@ -71,6 +71,10 @@ Page({
         icon: 'success'
       });
       
+      // 缴纳成功后，设置全局状态标记，通知其他页面保证金状态已更新
+      app.globalData.depositStatusChanged = true;
+      app.globalData.lastDepositItemId = this.data.itemId;
+      
       // 缴纳成功后返回上一页
       setTimeout(() => {
         wx.navigateBack();

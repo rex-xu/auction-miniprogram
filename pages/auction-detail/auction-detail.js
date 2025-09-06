@@ -12,7 +12,8 @@ Page({
     submittingBid: false,
     itemId: null,
     currentSwiperIndex: 0,
-    isLoggedIn: false // 添加用于WXML模板的登录状态标记
+    isLoggedIn: false, // 添加用于WXML模板的登录状态标记
+    refreshFlag: false // 用于强制刷新UI的标记位
   },
 
   onLoad(options) {
@@ -52,20 +53,43 @@ Page({
     console.log(">>>>>> onShow - Token in storage:", wx.getStorageSync('token'));
     console.log(">>>>>> onShow - Complete globalData:", app.globalData);
     
-    // 更新登录状态
-    const isLoggedIn = !!app.globalData.token;
-    this.setData({ isLoggedIn });
+    // 检查是否有保证金状态变化（从deposit页面返回）
+    const depositChanged = app.globalData.depositStatusChanged;
+    const lastDepositItemId = app.globalData.lastDepositItemId;
     
-    // 重新检查登录状态和保证金状态
-    if (isLoggedIn) {
-      this.checkDepositStatus();
+    // 如果有保证金状态变化且是当前拍品的保证金变化，则需要特别处理
+    if (depositChanged && lastDepositItemId === this.data.itemId) {
+      console.log(">>>>>> 检测到当前拍品保证金状态已更新，需要强制刷新");
+      // 重置全局标记，避免重复处理
+      app.globalData.depositStatusChanged = false;
+      app.globalData.lastDepositItemId = null;
+      
+      // 强制刷新页面数据
+      setTimeout(() => {
+        this.loadAuctionDetail();
+        this.checkDepositStatus();
+        this.loadBidHistory();
+      }, 500); // 使用稍长延迟确保后端数据已完全更新
     } else {
-      // 用户未登录，设置为未缴纳保证金状态并禁用出价功能
-      this.setData({ 
-        hasPaidDeposit: false,
-        canBid: false 
-      });
-      this.updateButtonText();
+      // 更新登录状态
+      const isLoggedIn = !!app.globalData.token;
+      this.setData({ isLoggedIn });
+      
+      // 重新检查登录状态和保证金状态
+      if (isLoggedIn) {
+        // 增加延迟以确保从其他页面返回时数据已更新
+        setTimeout(() => {
+          this.checkDepositStatus();
+          this.loadAuctionDetail();
+        }, 300);
+      } else {
+        // 用户未登录，设置为未缴纳保证金状态并禁用出价功能
+        this.setData({ 
+          hasPaidDeposit: false,
+          canBid: false 
+        });
+        this.updateButtonText();
+      }
     }
   },
   
@@ -196,19 +220,20 @@ Page({
     console.log(`开始检查拍品 ${itemId} 的保证金状态`);
     
     // 只有登录用户才检查保证金状态
-    if (app.globalData.token) {
+    if (app.globalData.token && itemId) {
       app.checkDeposit(itemId).then(hasPaid => {
         console.log(`拍品 ${itemId} 保证金状态检查结果: ${hasPaid ? '已缴纳' : '未缴纳'}`);
-        this.setData({ hasPaidDeposit: hasPaid });
+        this.setData({ 
+          hasPaidDeposit: hasPaid,
+          // 如果已缴纳保证金，启用出价功能（除非有其他限制）
+          canBid: hasPaid && this.data.canBid !== false
+        });
         
-        // 如果未缴纳保证金，自动将canBid设置为false
-        if (!hasPaid && this.data.canBid) {
-          this.setData({ canBid: false });
-          console.log('由于未缴纳保证金，已将出价权限设置为不可出价');
-        }
-        
-        // 更新按钮文本
+        // 直接在setData后立即调用updateButtonText，确保UI更新
         this.updateButtonText();
+        
+        // 强制刷新UI显示
+        this.setData({ refreshFlag: !this.data.refreshFlag });
       }).catch(error => {
         console.error(`检查拍品 ${itemId} 保证金失败:`, error);
         // 出错时确保设置为未支付状态
@@ -221,7 +246,7 @@ Page({
         this.updateButtonText();
       });
     } else {
-      console.log('用户未登录，设置为未缴纳保证金状态并禁用出价功能');
+      console.log('用户未登录或无商品ID，设置为未缴纳保证金状态并禁用出价功能');
       this.setData({ canBid: false });
       
       // 更新按钮文本
