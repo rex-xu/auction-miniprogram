@@ -1,8 +1,24 @@
 <!-- auction-detail.wxml -->
 <view class="container">
-  <!-- 拍卖品图片 -->
-  <view class="item-image">
-    <image src="{{auctionItem.display_image_url}}" mode="aspectFill"></image>
+  <!-- 拍卖品轮播图 -->
+  <view class="swiper-container">
+    <swiper 
+      indicator-dots="true" 
+      autoplay="false" 
+      interval="5000" 
+      duration="500" 
+      circular="true" 
+      class="item-swiper"
+      bindchange="onSwiperChange">
+      <block wx:for="{{auctionItem.imageUrls}}" wx:key="index">
+        <swiper-item>
+          <image src="{{item}}" mode="aspectFill" class="swiper-image"></image>
+        </swiper-item>
+      </block>
+    </swiper>
+    <view class="image-count" wx:if="{{auctionItem.imageUrls.length > 1}}">
+      {{currentSwiperIndex + 1}}/{{auctionItem.imageUrls.length}}
+    </view>
   </view>
   
   <!-- 拍卖品信息 -->

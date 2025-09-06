@@ -1,14 +1,32 @@
 /* auction-detail.wxss */
-.item-image {
+/* 轮播图样式 */
+.swiper-container {
   width: 100%;
   height: 500rpx;
-  overflow: hidden;
+  position: relative;
   margin-bottom: 20rpx;
 }
 
-.item-image image {
+.item-swiper {
   width: 100%;
   height: 100%;
+}
+
+.swiper-image {
+  width: 100%;
+  height: 100%;
+}
+
+/* 图片计数器样式 */
+.image-count {
+  position: absolute;
+  bottom: 20rpx;
+  right: 20rpx;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
 }
 
 .item-title {
