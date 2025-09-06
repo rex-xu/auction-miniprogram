@@ -89,3 +89,37 @@
   color: #999;
   border: 1rpx solid #d9d9d9;
 }
+
+/* 未登录状态样式 */
+.login-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 0;
+  background-color: #f9f9f9;
+  border-radius: 16rpx;
+  margin: 40rpx;
+}
+
+.login-icon {
+  width: 160rpx;
+  height: 160rpx;
+  margin-bottom: 40rpx;
+}
+
+.login-text {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 40rpx;
+  text-align: center;
+  line-height: 44rpx;
+}
+
+.btn-login {
+  width: 280rpx;
+  font-size: 28rpx;
+  background-color: #ff5555;
+  color: #fff;
+  border-radius: 60rpx;
+}

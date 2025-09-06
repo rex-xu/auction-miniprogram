@@ -58,19 +58,30 @@
   <!-- 竞拍区域 -->
   <view class="card" wx:if="{{auctionItem.status === 'in_progress'}}">
     <text class="subtitle">当前出价</text>
-    <input class="bid-input" type="number" placeholder="请输入出价金额" bindinput="onBidInput" value="{{bidPrice}}" />
-    <view class="quick-bids">
-      <text class="quick-bid" wx:for="{{quickBidOptions}}" wx:key="index" bindtap="onQuickBid" data-price="{{item}}">{{item}}</text>
+    
+    <!-- 未登录状态下的提示 -->
+    <view wx:if="{{!app.globalData.token}}" class="login-prompt">
+      <image class="login-icon" src="/assets/images/login.png"></image>
+      <text class="login-text">请先登录后参与竞拍</text>
+      <button class="btn btn-primary" bindtap="navigateToLogin" type="primary" size="mini">去登录</button>
     </view>
-    <button class="btn btn-primary" bindtap="submitBid" 
-            disabled="{{!canBid || !hasPaidDeposit}}" 
-            loading="{{submittingBid}}">
-      {{buttonText}}
-    </button>
-    <view wx:if="{{!hasPaidDeposit}}" class="deposit-tip">
-      <text>您需要先缴纳保证金才能参与竞拍</text>
-      <button class="btn btn-default" bindtap="navigateToDeposit" size="mini">去缴纳</button>
-    </view>
+    
+    <!-- 已登录状态下的出价功能 -->
+    <block wx:elif="{{app.globalData.token}}">
+      <input class="bid-input" type="number" placeholder="请输入出价金额" bindinput="onBidInput" value="{{bidPrice}}" />
+      <view class="quick-bids">
+        <text class="quick-bid" wx:for="{{quickBidOptions}}" wx:key="index" bindtap="onQuickBid" data-price="{{item}}">{{item}}</text>
+      </view>
+      <button class="btn btn-primary" bindtap="submitBid" 
+              disabled="{{!canBid || !hasPaidDeposit}}" 
+              loading="{{submittingBid}}">
+        {{buttonText}}
+      </button>
+      <view wx:if="{{!hasPaidDeposit}}" class="deposit-tip">
+        <text>您需要先缴纳保证金才能参与竞拍</text>
+        <button class="btn btn-default" bindtap="navigateToDeposit" size="mini">去缴纳</button>
+      </view>
+    </block>
   </view>
   
   <!-- 历史出价记录 -->

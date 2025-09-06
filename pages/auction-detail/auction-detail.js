@@ -397,6 +397,11 @@ Page({
     });
   },
 
+  // 跳转到登录页面
+  navigateToLogin() {
+    wx.navigateTo({ url: '/pages/login/login' });
+  },
+  
   // 跳转到缴纳保证金页面
   navigateToDeposit() {
     wx.navigateTo({

@@ -8,17 +8,31 @@ Page({
     page: 1,
     pageSize: 10,
     hasMore: true,
-    loading: false
+    loading: false,
+    isLoggedIn: false
   },
 
   onShow() {
-    // 每次显示页面都重新加载数据
-    this.setData({
-      bids: [],
-      page: 1,
-      hasMore: true
-    });
-    this.loadMyBids();
+    // 检查登录状态
+    this.checkLoginStatus();
+  },
+
+  // 检查登录状态
+  checkLoginStatus() {
+    const token = wx.getStorageSync('token');
+    const isLoggedIn = !!token;
+    
+    this.setData({ isLoggedIn });
+    
+    if (isLoggedIn) {
+      // 已登录，加载数据
+      this.setData({
+        bids: [],
+        page: 1,
+        hasMore: true
+      });
+      this.loadMyBids();
+    }
   },
 
   // 切换标签页
@@ -33,6 +47,11 @@ Page({
     this.loadMyBids();
   },
 
+  // 跳转到登录页面
+  goToLogin() {
+    wx.navigateTo({ url: '/pages/login/login' });
+  },
+  
   // 加载我的竞拍记录
   loadMyBids() {
     if (this.data.loading || !this.data.hasMore) return;

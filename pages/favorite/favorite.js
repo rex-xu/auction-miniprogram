@@ -8,13 +8,35 @@ Page({
     loading: true,
     hasMore: true,
     page: 1,
-    pageSize: 10
+    pageSize: 10,
+    isLoggedIn: false
   },
 
   onShow() {
-    // 每次页面显示时重新加载数据
-    this.resetData();
-    this.loadFavorites();
+    // 检查登录状态
+    this.checkLoginStatus();
+  },
+
+  // 检查登录状态
+  checkLoginStatus() {
+    const token = wx.getStorageSync('token');
+    const isLoggedIn = !!token;
+    
+    this.setData({ isLoggedIn });
+    
+    if (isLoggedIn) {
+      // 已登录，加载数据
+      this.resetData();
+      this.loadFavorites();
+    } else {
+      // 未登录，重置加载状态
+      this.setData({ loading: false });
+    }
+  },
+
+  // 跳转到登录页面
+  goToLogin() {
+    wx.navigateTo({ url: '/pages/login/login' });
   },
 
   // 重置数据
