@@ -146,7 +146,32 @@ Page({
   // 预处理拍卖项目数据
   processAuctionItem(item) {
     // 预处理图片URL
-    item.display_image_url = item.image_url || '/assets/images/default-item.png';
+    let displayImageUrl = '/assets/images/default-item.png';
+    if (item.media && item.media.length > 0) {
+      // 优先找主要图片
+      const primaryMedia = item.media.find(media => media.is_primary === true);
+      let fileUrl = '';
+      if (primaryMedia) {
+        fileUrl = primaryMedia.file_url;
+      } else {
+        // 否则使用第一张图片
+        fileUrl = item.media[0].file_url;
+      }
+      
+      // 检查URL是否已经是完整的URL格式（以http://或https://开头）
+      if (fileUrl && typeof fileUrl === 'string') {
+        // 解码URL以检查原始格式
+        const decodedUrl = decodeURIComponent(fileUrl);
+        if (decodedUrl.startsWith('http://') || decodedUrl.startsWith('https://')) {
+          // 如果已经是完整URL，就直接使用它
+          displayImageUrl = decodedUrl;
+        } else {
+          // 否则使用全局host构建完整URL
+          displayImageUrl = `${app.globalData.host}${fileUrl}`;
+        }
+      }
+    }
+    item.display_image_url = displayImageUrl;
     
     // 预处理状态文本和样式
     item.status_text = this.getStatusText(item.status);

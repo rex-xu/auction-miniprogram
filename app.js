@@ -4,7 +4,8 @@ App({
     userInfo: null,
     token: '',
     baseUrl: 'http://127.0.0.1:8000/api/v1', // 后端API地址
-    socketUrl: 'ws://127.0.0.1:8000/ws/auction'
+    socketUrl: 'ws://127.0.0.1:8000/ws/auction',
+    host: 'http://127.0.0.1:8000'
   },
 
   onLaunch() {
