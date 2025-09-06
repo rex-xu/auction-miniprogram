@@ -20,11 +20,19 @@ Page({
   // 检查登录状态
   checkLoginStatus() {
     const token = wx.getStorageSync('token');
-    const isLoggedIn = !!token;
+    const userInfo = wx.getStorageSync('userInfo');
+    const isLoggedIn = !!token && !!userInfo;
+    
+    console.log('登录状态检查:', { token: !!token, userInfo: !!userInfo, isLoggedIn });
     
     this.setData({ isLoggedIn });
     
     if (isLoggedIn) {
+      console.log('用户信息:', userInfo);
+      // 确保全局用户信息已设置
+      app.globalData.userInfo = userInfo;
+      app.globalData.token = token;
+      
       // 已登录，加载数据
       this.setData({
         bids: [],
@@ -32,6 +40,12 @@ Page({
         hasMore: true
       });
       this.loadMyBids();
+    } else {
+      console.log('未登录，清空数据');
+      this.setData({
+        bids: [],
+        loading: false
+      });
     }
   },
 
@@ -46,7 +60,7 @@ Page({
     });
     this.loadMyBids();
   },
-
+  
   // 跳转到登录页面
   goToLogin() {
     wx.navigateTo({ url: '/pages/login/login' });
@@ -60,50 +74,134 @@ Page({
     
     let filters = {};
     
-    // 根据当前标签页设置过滤条件
-    switch (this.data.activeTab) {
-      case 'ongoing':
-        filters.status = 'in_progress';
-        break;
-      case 'won':
-        filters.status = 'ended';
-        filters.is_winner = true;
-        break;
-      case 'lost':
-        filters.status = 'ended';
-        filters.is_winner = false;
-        break;
+    // 确保用户信息存在
+    if (!app.globalData.userInfo || !app.globalData.userInfo.id) {
+      console.error('用户信息不存在或用户ID为空');
+      this.setData({ loading: false });
+      return;
     }
     
-    app.request({
-      url: `${app.globalData.baseUrl}/user-bids/`,
+    // 根据当前标签页设置过滤条件
+    if (this.data.activeTab === 'ongoing') {
+      filters.status = 'winning';
+    } else if (this.data.activeTab === 'lost') {
+      filters.status = 'lost';
+    }
+    // 'all'标签页不添加额外过滤条件
+    // 'won'标签页的过滤将在获取数据后进行，因为需要结合拍卖品状态
+    
+    console.log('请求参数:', {
+      url: `${app.globalData.baseUrl}/bid-records/`,
       data: {
         page: this.data.page,
         page_size: this.data.pageSize,
+        bidder_id: app.globalData.userInfo.id,
+        ...filters
+      }
+    });
+    
+    app.request({
+      url: `${app.globalData.baseUrl}/bid-records/`,
+      data: {
+        page: this.data.page,
+        page_size: this.data.pageSize,
+        bidder_id: app.globalData.userInfo.id,
         ...filters
       },
       success: (res) => {
-        const newBids = res.results || [];
+        console.log('API响应数据:', res);
+        console.log('API响应类型:', typeof res);
+        console.log('API响应是否为数组:', Array.isArray(res));
+        
+        // Django REST Framework默认会使用分页，数据在results字段中
+        let newBids = [];
+        if (res && res.results && Array.isArray(res.results)) {
+          // 处理分页响应
+          newBids = res.results;
+        } else if (Array.isArray(res)) {
+          // 处理非分页的数组响应
+          newBids = res;
+        } else if (res && res.data) {
+          // 处理统一响应格式
+          newBids = res.data;
+        } else {
+          // 其他情况，尝试作为单个对象处理
+          newBids = [res];
+        }
+        console.log('处理前的竞拍记录:', newBids);
+        
+        // 确保newBids是数组
+        if (!Array.isArray(newBids)) {
+          newBids = [];
+        }
+        
+        // 过滤掉无效的竞拍记录（确保至少有bid_amount和auction_item_info）
+        newBids = newBids.filter(item => item && item.bid_amount !== undefined && item.auction_item_info !== undefined);
+        
+        console.log('过滤后的竞拍记录:', newBids);
+        
+        // 如果是'won'标签页，需要额外过滤：竞拍状态为winning且拍卖品状态为ended或successful
+        if (this.data.activeTab === 'won') {
+          newBids = newBids.filter(item => {
+            const auctionStatus = item.auction_item_info && item.auction_item_info.status;
+            return item.status === 'winning' && (auctionStatus === 'ended' || auctionStatus === 'successful');
+          });
+          console.log('已中标标签页过滤后的竞拍记录:', newBids);
+        }
         
         // 对每条竞拍记录预先计算状态信息
         const processedBids = newBids.map(item => {
-          if (item.auction_item) {
-            // 处理拍卖品数据
-            const processedAuctionItem = {
-              ...item.auction_item,
-              display_image_url: item.auction_item.image_url || '/assets/images/default-item.png'
-            };
-            
-            return {
-              ...item,
-              auction_item: processedAuctionItem,
-              bid_status_text: this.getBidStatusText(item.auction_item.status, item.price, item.auction_item.current_price),
-              bid_status_class: this.getBidStatusClass(item.auction_item.status, item.price, item.auction_item.current_price),
-              is_highest: item.price >= item.auction_item.current_price,
-              is_not_highest: item.price < item.auction_item.current_price
-            };
+          // 提取拍卖品信息
+          const auctionItemInfo = item.auction_item_info || {};
+          
+          // 格式化竞拍状态文本
+          let bidStatusText = '';
+          let bidStatusClass = '';
+          
+          const auctionStatus = auctionItemInfo.status;
+          if (item.status === 'winning') {
+            // 判断拍卖品是否已结束
+            if (auctionStatus === 'ended' || auctionStatus === 'successful' || auctionStatus === 'paid' || auctionStatus === 'shipped' || auctionStatus === 'completed') {
+              bidStatusText = '已中标';
+              bidStatusClass = 'status-won';
+            } else {
+              bidStatusText = '竞拍中';
+              bidStatusClass = 'status-ongoing';
+            }
+          } else if (item.status === 'lost') {
+            bidStatusText = '未中标';
+            bidStatusClass = 'status-lost';
           }
-          return item;
+          
+          // 处理拍卖品数据
+          const processedAuctionItem = {
+            ...auctionItemInfo,
+            display_image_url: (auctionItemInfo && auctionItemInfo.media && auctionItemInfo.media.length > 0) ? 
+                              auctionItemInfo.media[0].file_url : '/assets/images/default-item.png',
+            id: (auctionItemInfo && auctionItemInfo.id) || '',
+            title: (auctionItemInfo && auctionItemInfo.title) || '未知拍卖品',
+            current_price: (auctionItemInfo && auctionItemInfo.current_price) || 0
+          };
+          
+          // 更准确地计算是否是最高价
+          // 1. 首先根据后端状态判断
+          // 2. 然后通过比较出价和当前最高价做额外验证
+          const myBidAmount = item.bid_amount || 0;
+          const currentPrice = auctionItemInfo.current_price || 0;
+          
+          // 如果状态是winning，但出价低于当前最高价，则不是最高价
+          const isHighest = item.status === 'winning' && myBidAmount >= currentPrice;
+          const isNotHighest = item.status === 'lost' || (item.status === 'winning' && myBidAmount < currentPrice);
+          
+          return {
+            ...item,
+            auction_item: processedAuctionItem,
+            price: item.bid_amount || 0, // 确保价格字段存在
+            bid_status_text: bidStatusText,
+            bid_status_class: bidStatusClass,
+            is_highest: isHighest,
+            is_not_highest: isNotHighest
+          };
         });
         
         // 预先计算标签页的活跃状态
@@ -114,6 +212,7 @@ Page({
           lost: this.data.activeTab === 'lost' ? 'tag-active' : ''
         };
         
+        console.log('处理后的竞拍记录:', processedBids);
         const hasMore = newBids.length === this.data.pageSize;
         
         this.setData({
@@ -121,13 +220,14 @@ Page({
           activeTags: activeTags,
           hasMore: hasMore,
           page: this.data.page + 1,
-          loading: false
+          loading: false,
+          totalCount: res.total_count || this.data.bids.length + processedBids.length
         });
       },
       fail: () => {
         this.setData({ loading: false });
         wx.showToast({
-          title: '加载失败，请重试',
+          title: '网络异常，请重试',
           icon: 'none'
         });
       },
