@@ -368,8 +368,10 @@ Page({
       const bidHistory = data.results || [];
       
       // 预先计算每条出价记录的格式化时间和出价者昵称
+      // 添加价格字段映射，确保金额正确显示
       const processedBidHistory = bidHistory.map(record => ({
         ...record,
+        price: record.bid_amount || record.price || 0, // 优先使用bid_amount字段
         formatted_created_at: this.formatDateTime(record.created_at),
         display_bidder_name: record.bidder?.nickname || '匿名用户'
       }));
