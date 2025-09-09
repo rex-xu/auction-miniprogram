@@ -204,8 +204,7 @@ Page({
           // 处理拍卖品数据
           const processedAuctionItem = {
             ...auctionItemInfo,
-            display_image_url: (auctionItemInfo && auctionItemInfo.media && auctionItemInfo.media.length > 0) ? 
-                              auctionItemInfo.media[0].file_url : '/assets/images/default-item.png',
+            display_image_url: app.getImageUrl(auctionItemInfo),
             id: (auctionItemInfo && auctionItemInfo.id) || '',
             title: (auctionItemInfo && auctionItemInfo.title) || '未知拍卖品',
             current_price: (auctionItemInfo && auctionItemInfo.current_price) || 0

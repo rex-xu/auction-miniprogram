@@ -17,16 +17,16 @@
       <view wx:for="{{deposits}}" wx:key="id" class="card">
         <view class="deposit-item">
           <view class="deposit-image">
-            <image src="{{item.auction_item.image_url || '/assets/images/default-item.png'}}" mode="aspectFill"></image>
+            <image src="{{item.imageUrl}}" mode="aspectFill"></image>
           </view>
           <view class="deposit-info">
             <view class="deposit-title">{{item.auction_item.title}}</view>
             <view class="deposit-meta">
               <text class="deposit-amount"><text class="price-symbol">¥</text>{{item.amount}}</text>
-              <text class="deposit-status">{{getStatusText(item.status)}}</text>
+              <text class="deposit-status">{{item.status_text}}</text>
             </view>
             <view class="deposit-time">
-              <text>缴纳时间：{{formatDateTime(item.created_at)}}</text>
+              <text>缴纳时间：{{item.formatted_created_at}}</text>
             </view>
           </view>
         </view>

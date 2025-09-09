@@ -269,58 +269,11 @@ Page({
   
   // 预处理拍卖项目数据
   processAuctionItem(item) {
-    // 预处理图片URL - 单个主图
-    let displayImageUrl = '/assets/images/default-item.png';
+    // 使用app.js中的getImageUrl方法获取主图URL
+    item.display_image_url = app.getImageUrl(item);
     
-    // 预处理所有图片URL - 用于轮播图
-    item.imageUrls = [];
-    
-    if (item.media && item.media.length > 0) {
-      // 处理所有媒体文件，创建完整URL数组
-      item.imageUrls = item.media.map(media => {
-        let fileUrl = media.file_url;
-        if (fileUrl && typeof fileUrl === 'string') {
-          // 解码URL以检查原始格式
-          const decodedUrl = decodeURIComponent(fileUrl);
-          if (decodedUrl.startsWith('http://') || decodedUrl.startsWith('https://')) {
-            // 如果已经是完整URL，就直接使用它
-            return decodedUrl;
-          } else {
-            // 否则使用全局host构建完整URL
-            return `${app.globalData.host}${fileUrl}`;
-          }
-        }
-        return '/assets/images/default-item.png';
-      });
-      
-      // 优先找主要图片作为显示图
-      const primaryMedia = item.media.find(media => media.is_primary === true);
-      let fileUrl = '';
-      if (primaryMedia) {
-        fileUrl = primaryMedia.file_url;
-      } else {
-        // 否则使用第一张图片
-        fileUrl = item.media[0].file_url;
-      }
-      
-      // 处理主图URL
-      if (fileUrl && typeof fileUrl === 'string') {
-        // 解码URL以检查原始格式
-        const decodedUrl = decodeURIComponent(fileUrl);
-        if (decodedUrl.startsWith('http://') || decodedUrl.startsWith('https://')) {
-          // 如果已经是完整URL，就直接使用它
-          displayImageUrl = decodedUrl;
-        } else {
-          // 否则使用全局host构建完整URL
-          displayImageUrl = `${app.globalData.host}${fileUrl}`;
-        }
-      }
-    } else {
-      // 如果没有媒体文件，添加默认图片到数组
-      item.imageUrls = [displayImageUrl];
-    }
-    
-    item.display_image_url = displayImageUrl;
+    // 使用app.js中的getImageUrls方法获取所有图片URL数组（用于轮播图）
+    item.imageUrls = app.getImageUrls(item);
     
     // 预处理状态文本和样式
     item.status_text = this.getStatusText(item.status);

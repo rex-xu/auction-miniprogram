@@ -37,7 +37,7 @@
                 <text class="bid-count">{{item.auction_item.bid_count}}人出价</text>
               </view>
               <view class="item-status">
-                <text class="status-tag">{{getStatusText(item.auction_item.status)}}</text>
+                <text class="status-tag">{{item.auction_item.status_text}}</text>
               </view>
             </view>
           </view>

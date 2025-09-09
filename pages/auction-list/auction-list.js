@@ -37,6 +37,40 @@ Page({
     this.clearAllCountdown();
   },
 
+  // 获取状态文本
+  getStatusText(status) {
+    const statusMap = {
+      'ongoing': '进行中',
+      'upcoming': '即将开始',
+      'ended': '已结束'
+    };
+    return statusMap[status] || status;
+  },
+
+  // 格式化日期
+  formatDate(dateString) {
+    if (!dateString) return '';
+    
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    
+    return `${year}-${month}-${day}`;
+  },
+
+  // 格式化倒计时
+  formatCountdown(milliseconds) {
+    if (!milliseconds) return '00:00:00';
+    
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  },
+
   // 加载拍卖列表
   loadAuctionList() {
     if (this.data.loading || !this.data.hasMore) return;
@@ -71,16 +105,23 @@ Page({
         const newItems = res.results || [];
         const allItems = [...this.data.auctionItems, ...newItems];
         
-        // 为进行中的拍卖品添加倒计时，并为所有拍卖品预先计算状态文本
+        // 为进行中的拍卖品添加倒计时，并为所有拍卖品预先计算状态文本和格式化日期
         const now = Date.now();
         newItems.forEach(item => {
           // 计算状态文本
           item.status_text = this.getStatusText(item.status);
           
-          // 为进行中的拍卖品添加倒计时
+          // 为即将开始的拍卖品格式化开始日期
+          if (item.status === 'upcoming' && item.start_time) {
+            item.formatted_start_time = this.formatDate(item.start_time);
+          }
+          
+          // 为进行中的拍卖品添加倒计时和格式化倒计时字符串
           if (item.status === 'ongoing' && item.end_time) {
             const endTime = new Date(item.end_time).getTime();
             item.remaining_time = Math.max(0, endTime - now);
+            // 预先计算初始倒计时字符串
+            item.countdown_text = this.formatCountdown(item.remaining_time);
           }
         });
         
@@ -210,6 +251,8 @@ Page({
       items.forEach((item, index) => {
         if (item.id === itemId && item.remaining_time > 0) {
           items[index].remaining_time -= 1000;
+          // 更新格式化的倒计时字符串
+          items[index].countdown_text = this.formatCountdown(items[index].remaining_time);
           updated = true;
           
           // 如果时间到了，清除定时器
@@ -260,45 +303,21 @@ Page({
       success: (res) => {
         const items = this.data.auctionItems;
         items[index] = res;
+        // 重新计算状态文本和格式化数据
+        items[index].status_text = this.getStatusText(res.status);
+        if (res.status === 'upcoming' && res.start_time) {
+          items[index].formatted_start_time = this.formatDate(res.start_time);
+        }
+        if (res.status === 'ongoing' && res.end_time) {
+          const endTime = new Date(res.end_time).getTime();
+          items[index].remaining_time = Math.max(0, endTime - Date.now());
+          items[index].countdown_text = this.formatCountdown(items[index].remaining_time);
+        }
         this.setData({ auctionItems: items });
       },
       fail: () => {
         console.log('加载拍卖品信息失败');
       }
     });
-  },
-
-  // 获取状态文本
-  getStatusText(status) {
-    const statusMap = {
-      'ongoing': '进行中',
-      'upcoming': '即将开始',
-      'ended': '已结束'
-    };
-    return statusMap[status] || status;
-  },
-
-  // 格式化倒计时
-  formatCountdown(milliseconds) {
-    if (!milliseconds) return '00:00:00';
-    
-    const totalSeconds = Math.floor(milliseconds / 1000);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-    
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  },
-
-  // 格式化日期
-  formatDate(dateString) {
-    if (!dateString) return '';
-    
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    
-    return `${year}-${month}-${day}`;
   }
 });

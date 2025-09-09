@@ -45,11 +45,11 @@
           </view>
           <view class="item-time" wx:if="{{item.status === 'ongoing'}}">
             <text class="time-label">剩余:</text>
-            <text class="time-value">{{formatCountdown(item.remaining_time)}}</text>
+            <text class="time-value">{{item.countdown_text}}</text>
           </view>
-          <view class="item-time" wx:elif="item.status === 'upcoming'">
+          <view class="item-time" wx:elif="{{item.status === 'upcoming'}}">
             <text class="time-label">开始:</text>
-            <text class="time-value">{{formatDate(item.start_time)}}</text>
+            <text class="time-value">{{item.formatted_start_time}}</text>
           </view>
         </view>
       </view>

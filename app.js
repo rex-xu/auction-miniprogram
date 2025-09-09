@@ -261,5 +261,70 @@ App({
       const errorMsg = error.message || '竞拍失败，请稍后重试';
       throw new Error(errorMsg);
     }
+  },
+  
+  // 获取单个图片URL的内部方法
+  _processImageUrl(fileUrl, defaultUrl = '/assets/images/default-item.png') {
+    if (fileUrl && typeof fileUrl === 'string') {
+      // 解码URL以检查原始格式
+      const decodedUrl = decodeURIComponent(fileUrl);
+      if (decodedUrl.startsWith('http://') || decodedUrl.startsWith('https://')) {
+        // 如果已经是完整URL，就直接使用它
+        return decodedUrl;
+      } else {
+        // 否则使用全局host构建完整URL
+        return `${this.globalData.host}${fileUrl}`;
+      }
+    }
+    return defaultUrl;
+  },
+  
+  // 获取拍卖品图片URL的公共方法（获取主图）
+  getImageUrl(auctionItem, defaultUrl = '/assets/images/default-item.png') {
+    // 如果传入的是auctionItem对象，提取其media数组
+    let mediaArray = null;
+    if (auctionItem && typeof auctionItem === 'object') {
+      mediaArray = auctionItem.media;
+    } else if (Array.isArray(auctionItem)) {
+      // 如果直接传入media数组
+      mediaArray = auctionItem;
+    }
+    
+    // 检查media数组是否存在且有元素
+    if (mediaArray && mediaArray.length > 0) {
+      // 优先选择is_primary为true的图片
+      const primaryMedia = mediaArray.find(media => media && media.is_primary === true);
+      let selectedMedia = primaryMedia || mediaArray[0];
+      
+      if (selectedMedia && selectedMedia.file_url) {
+        return this._processImageUrl(selectedMedia.file_url, defaultUrl);
+      }
+    }
+    
+    // 如果没有找到合适的图片，返回默认图片URL
+    return defaultUrl;
+  },
+  
+  // 获取拍卖品所有图片URL的公共方法（用于轮播图）
+  getImageUrls(auctionItem, defaultUrl = '/assets/images/default-item.png') {
+    // 如果传入的是auctionItem对象，提取其media数组
+    let mediaArray = null;
+    if (auctionItem && typeof auctionItem === 'object') {
+      mediaArray = auctionItem.media;
+    } else if (Array.isArray(auctionItem)) {
+      // 如果直接传入media数组
+      mediaArray = auctionItem;
+    }
+    
+    // 检查media数组是否存在且有元素
+    if (mediaArray && mediaArray.length > 0) {
+      // 处理所有媒体文件，创建完整URL数组
+      return mediaArray.map(media => {
+        return this._processImageUrl(media.file_url, defaultUrl);
+      });
+    } else {
+      // 如果没有媒体文件，返回包含默认图片的数组
+      return [defaultUrl];
+    }
   }
 });

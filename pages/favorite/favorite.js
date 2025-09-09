@@ -68,6 +68,25 @@ Page({
     };
   },
 
+  // 获取拍卖品状态文本
+  getStatusText(status) {
+    const statusMap = {
+      'ongoing': '进行中',
+      'ended': '已结束',
+      'upcoming': '即将开始'
+    };
+    return statusMap[status] || status;
+  },
+
+  // 格式化日期
+  formatDate(dateString) {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  },
+
   // 切换标签
   switchTab(e) {
     const tab = e.currentTarget.dataset.tab;
@@ -115,11 +134,17 @@ Page({
               }
             };
           }
-          // 处理拍卖品的图片URL
+          // 处理拍卖品的图片URL和状态文本
           else if (item.type === 'auction' && item.auction_item) {
+            // 预处理拍卖品状态文本
+            const statusText = this.getStatusText(item.auction_item.status);
+            
             return {
               ...item,
-              auction_item: this.processAuctionImageUrl(item.auction_item)
+              auction_item: {
+                ...this.processAuctionImageUrl(item.auction_item),
+                status_text: statusText
+              }
             };
           }
           return item;
@@ -206,24 +231,5 @@ Page({
   // 阻止事件冒泡
   stopPropagation() {
     // 阻止事件冒泡，避免触发viewDetail
-  },
-
-  // 获取拍卖品状态文本
-  getStatusText(status) {
-    const statusMap = {
-      'ongoing': '进行中',
-      'ended': '已结束',
-      'upcoming': '即将开始'
-    };
-    return statusMap[status] || status;
-  },
-
-  // 格式化日期
-  formatDate(dateString) {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
   }
 });
