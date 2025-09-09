@@ -64,7 +64,7 @@ Page({
         break;
     }
     
-    console.log("home request /auction-search/");
+    console.log("home request /auction-search/" + status);
     try {
       // 注意：app.request方法已经处理了后端统一响应格式，直接返回res.data.data部分
       const data = await app.request({

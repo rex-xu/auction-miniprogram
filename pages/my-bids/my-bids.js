@@ -5,6 +5,12 @@ Page({
   data: {
     bids: [],
     activeTab: 'all', // all, ongoing, won, lost
+    activeTags: {
+      all: 'tag-active',
+      ongoing: '',
+      won: '',
+      lost: ''
+    },
     page: 1,
     pageSize: 10,
     hasMore: true,
@@ -52,8 +58,18 @@ Page({
   // 切换标签页
   switchTab(e) {
     const tab = e.currentTarget.dataset.tab;
+    
+    // 更新标签页状态
+    const activeTags = {
+      all: tab === 'all' ? 'tag-active' : '',
+      ongoing: tab === 'ongoing' ? 'tag-active' : '',
+      won: tab === 'won' ? 'tag-active' : '',
+      lost: tab === 'lost' ? 'tag-active' : ''
+    };
+    
     this.setData({
       activeTab: tab,
+      activeTags: activeTags,
       bids: [],
       page: 1,
       hasMore: true
@@ -83,12 +99,16 @@ Page({
     
     // 根据当前标签页设置过滤条件
     if (this.data.activeTab === 'ongoing') {
+      // 进行中标签：显示竞拍状态为winning且拍卖品状态为进行中的记录
       filters.status = 'winning';
     } else if (this.data.activeTab === 'lost') {
+      // 未中标标签：显示竞拍状态为lost的记录
       filters.status = 'lost';
+    } else if (this.data.activeTab === 'won') {
+      // 中标标签：先在API请求时设置status=winning，然后在获取数据后根据拍卖品状态进一步过滤
+      filters.status = 'winning';
     }
-    // 'all'标签页不添加额外过滤条件
-    // 'won'标签页的过滤将在获取数据后进行，因为需要结合拍卖品状态
+    // all标签页不添加额外过滤条件
     
     console.log('请求参数:', {
       url: `${app.globalData.baseUrl}/bid-records/`,
@@ -147,6 +167,14 @@ Page({
             return item.status === 'winning' && (auctionStatus === 'ended' || auctionStatus === 'successful');
           });
           console.log('已中标标签页过滤后的竞拍记录:', newBids);
+        } 
+        // 如果是'ongoing'标签页，需要额外过滤：竞拍状态为winning且拍卖品状态为进行中
+        else if (this.data.activeTab === 'ongoing') {
+          newBids = newBids.filter(item => {
+            const auctionStatus = item.auction_item_info && item.auction_item_info.status;
+            return item.status === 'winning' && auctionStatus === 'in_progress';
+          });
+          console.log('进行中标签页过滤后的竞拍记录:', newBids);
         }
         
         // 对每条竞拍记录预先计算状态信息
