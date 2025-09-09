@@ -14,7 +14,7 @@
   <!-- 保证金记录列表 -->
   <view class="deposits-list">
     <block wx:if="{{deposits.length > 0}}">
-      <view wx:for="{{deposits}}" wx:key="id" class="card">
+      <view wx:for="{{deposits}}" wx:key="id" class="card" bindtap="goToAuctionDetail" data-id="{{item.auction_item_info.id}}">
         <view class="deposit-item">
           <view class="deposit-image">
             <image src="{{item.imageUrl}}" mode="aspectFill"></image>

@@ -121,5 +121,13 @@ Page({
   // 加载更多
   loadMore() {
     this.loadMyDeposits();
+  },
+  
+  // 跳转到拍卖品详情页
+  goToAuctionDetail(e) {
+    const auctionId = e.currentTarget.dataset.id;
+    wx.navigateTo({
+      url: `/pages/auction-detail/auction-detail?id=${auctionId}`
+    });
   }
 });
