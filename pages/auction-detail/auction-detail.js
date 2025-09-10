@@ -226,7 +226,7 @@ Page({
         this.setData({ 
           hasPaidDeposit: hasPaid,
           // 如果已缴纳保证金，启用出价功能（除非有其他限制）
-          canBid: hasPaid && this.data.canBid !== false
+          canBid: hasPaid
         });
         
         // 直接在setData后立即调用updateButtonText，确保UI更新
