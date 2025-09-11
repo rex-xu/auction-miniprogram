@@ -326,7 +326,7 @@ Page({
         ...record,
         price: record.bid_amount || record.price || 0, // 优先使用bid_amount字段
         formatted_created_at: this.formatDateTime(record.created_at),
-        display_bidder_name: record.bidder?.nickname || '匿名用户'
+        display_bidder_name: record.bidder_name || '匿名用户'
       }));
       
       this.setData({ bidHistory: processedBidHistory });
