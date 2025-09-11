@@ -30,7 +30,7 @@ function request(options, isShowLoading = true) {
       ...options,
       header,
       success: (res) => {
-        console.log("request success : " + res);
+        console.log("request success : ", res);
         // 隐藏加载提示
         if (isShowLoading) {
           wx.hideLoading();
@@ -44,22 +44,21 @@ function request(options, isShowLoading = true) {
           app.logout();
           reject(new Error('请先登录'));
         } else {
-          reject(new Error(res.data.message || '请求失败'));
+          // 创建包含响应数据的错误对象，以便上层可以获取具体错误信息
+          const error = new Error(res.data.message || '请求失败');
+          error.data = res.data;
+          error.statusCode = res.statusCode;
+          reject(error);
         }
       },
       fail: (err) => {
-        console.log("request fail : " + res);
+        console.log("request fail : ", err);
         // 隐藏加载提示
         if (isShowLoading) {
           wx.hideLoading();
         }
         
-        // 显示错误提示
-        wx.showToast({
-          title: '网络请求失败',
-          icon: 'none'
-        });
-        
+        // 不在这里显示错误提示，让调用者自己处理
         reject(err);
       }
     });

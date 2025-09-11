@@ -20,10 +20,14 @@
             <image src="{{item.imageUrl}}" mode="aspectFill"></image>
           </view>
           <view class="deposit-info">
-            <view class="deposit-title">{{item.auction_item.title}}</view>
+            <view class="deposit-title">{{item.auction_item_info.title}}</view>
             <view class="deposit-meta">
               <text class="deposit-amount"><text class="price-symbol">¥</text>{{item.amount}}</text>
               <text class="deposit-status">{{item.status_text}}</text>
+            </view>
+            <!-- 申请退款按钮，仅在状态为已缴纳且拍卖已结束时显示 -->
+            <view class="deposit-actions" wx:if="{{item.status === 'paid' && item.auction_item_info.status !== 'in_progress' && (item.auction_item_info.winner_id !== userInfo.id || item.auction_item_info.status !== 'successful')}}">
+              <button class="refund-btn" size="mini" catchtap="applyRefund" data-id="{{item.auction_item_info.id}}">申请退款</button>
             </view>
             <view class="deposit-time">
               <text>缴纳时间：{{item.formatted_created_at}}</text>

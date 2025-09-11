@@ -79,3 +79,23 @@
   font-size: 24rpx;
   color: #999;
 }
+
+/* 退款按钮样式 */
+.deposit-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10rpx;
+}
+
+.refund-btn {
+  background-color: #1890ff;
+  color: #fff;
+  font-size: 24rpx;
+  border-radius: 50rpx;
+  padding: 0 30rpx;
+  line-height: 1.5;
+}
+
+.refund-btn:active {
+  background-color: #40a9ff;
+}
