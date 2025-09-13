@@ -13,7 +13,8 @@ Page({
     itemId: null,
     currentSwiperIndex: 0,
     isLoggedIn: false, // 添加用于WXML模板的登录状态标记
-    refreshFlag: false // 用于强制刷新UI的标记位
+    refreshFlag: false, // 用于强制刷新UI的标记位
+    isFavorite: false // 收藏状态
   },
 
   onLoad(options) {
@@ -81,6 +82,7 @@ Page({
         setTimeout(() => {
           this.checkDepositStatus();
           this.loadAuctionDetail();
+          this.checkFavoriteStatus(); // 检查收藏状态
         }, 300);
       } else {
         // 用户未登录，设置为未缴纳保证金状态并禁用出价功能
@@ -194,6 +196,11 @@ Page({
       const buttonText = this.data.hasPaidDeposit ? 
         (this.data.canBid ? '确认出价' : '无法出价') : '请先缴纳保证金';
       
+      // 加载拍卖详情后，检查收藏状态
+      if (app.globalData.token) {
+        this.checkFavoriteStatus();
+      }
+      
       this.setData({
         auctionItem: processedItem,
         quickBidOptions: quickBids,
@@ -203,11 +210,141 @@ Page({
     } catch (error) {
       console.error('加载拍卖详情失败:', error);
       wx.showToast({
-        title: '加载失败，请重试',
+        title: '加载详情失败，请重试',
         icon: 'none'
       });
-      wx.navigateBack();
     }
+  },
+  
+  // 检查是否已收藏
+  checkFavoriteStatus() {
+    if (!this.data.isLoggedIn) return;
+    
+    app.request({
+      url: `${app.globalData.baseUrl}/user-favorites/`,
+      method: 'GET',
+      data: {
+        auction_id: this.data.itemId
+      },
+      success: (res) => {
+        // 检查是否有匹配的收藏记录
+        const isFavorite = res.results && res.results.length > 0;
+        this.setData({ isFavorite });
+      },
+      fail: (error) => {
+        console.error('检查收藏状态失败:', error);
+      }
+    });
+  },
+  
+  // 收藏功能
+  toggleFavorite() {
+    if (!this.data.isLoggedIn) {
+      wx.showToast({
+        title: '请先登录',
+        icon: 'none'
+      });
+      this.navigateToLogin();
+      return;
+    }
+    
+    if (this.data.isFavorite) {
+      // 取消收藏
+      this.unfavorite();
+    } else {
+      // 添加收藏
+      this.favorite();
+    }
+  },
+  
+  // 添加收藏
+  favorite() {
+    app.request({
+      url: `${app.globalData.baseUrl}/user-favorites/`,
+      method: 'POST',
+      data: {
+        auction_id: this.data.itemId
+      },
+      success: (res) => {
+        this.setData({ isFavorite: true });
+        wx.showToast({
+          title: '收藏成功',
+          icon: 'success'
+        });
+        
+        // 更新拍卖品的收藏计数
+        this.updateFavoriteCount(1);
+      },
+      fail: (error) => {
+        console.error('收藏失败:', error);
+        wx.showToast({
+          title: '收藏失败，请重试',
+          icon: 'none'
+        });
+      }
+    });
+  },
+  
+  // 取消收藏
+  unfavorite() {
+    // 首先获取收藏ID
+    app.request({
+      url: `${app.globalData.baseUrl}/user-favorites/`,
+      method: 'GET',
+      data: {
+        auction_id: this.data.itemId
+      },
+      success: (res) => {
+        if (res.results && res.results.length > 0) {
+          const favoriteId = res.results[0].id;
+          
+          // 执行取消收藏
+          app.request({
+            url: `${app.globalData.baseUrl}/user-favorites/${favoriteId}/`,
+            method: 'DELETE',
+            success: (res) => {
+              this.setData({ isFavorite: false });
+              wx.showToast({
+                title: '已取消收藏',
+                icon: 'success'
+              });
+              
+              // 更新拍卖品的收藏计数
+              this.updateFavoriteCount(-1);
+            },
+            fail: (error) => {
+              console.error('取消收藏失败:', error);
+              wx.showToast({
+                title: '取消收藏失败，请重试',
+                icon: 'none'
+              });
+            }
+          });
+        }
+      },
+      fail: (error) => {
+        console.error('获取收藏记录失败:', error);
+        wx.showToast({
+          title: '操作失败，请重试',
+          icon: 'none'
+        });
+      }
+    });
+  },
+  
+  // 更新收藏计数
+  updateFavoriteCount(change) {
+    const currentCount = this.data.auctionItem.favorite_count || 0;
+    const newCount = currentCount + change;
+    
+    const updatedAuctionItem = {
+      ...this.data.auctionItem,
+      favorite_count: newCount
+    };
+    
+    this.setData({
+      auctionItem: updatedAuctionItem
+    });
   },
 
   // 检查保证金状态

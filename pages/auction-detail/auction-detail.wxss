@@ -201,3 +201,49 @@
 .item-description :first-child {
   margin-top: 0;
 }
+
+/* 收藏功能样式 */
+.favorite-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding: 20rpx 0;
+  border-top: 1rpx solid #f0f0f0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.favorite-count {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.favorite-btn {
+  display: flex;
+  align-items: center;
+  padding: 12rpx 24rpx;
+  border: 1rpx solid #d9d9d9;
+  border-radius: 40rpx;
+  background-color: #fff;
+  transition: all 0.3s;
+}
+
+.favorite-btn:active {
+  opacity: 0.8;
+}
+
+.favorite-icon {
+  font-size: 32rpx;
+  color: #999;
+  margin-right: 8rpx;
+  transition: color 0.3s;
+}
+
+.favorite-icon.active {
+  color: #ffd700;
+}
+
+.favorite-text {
+  font-size: 28rpx;
+  color: #666;
+}
