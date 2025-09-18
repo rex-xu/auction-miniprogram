@@ -165,21 +165,26 @@ App({
       header['Authorization'] = `Token ${token}`;
     }
     
+    console.log('发起API请求:', { url: options.url, method: options.method || 'GET', data: options.data });
+    
     return new Promise((resolve, reject) => {
       wx.request({
         ...options,
         header,
         success: (res) => {
+          console.log('API请求成功:', { url: options.url, statusCode: res.statusCode, data: res.data });
           console.log('>>>>>> request响应状态码:', res.statusCode);
           console.log('>>>>>> request响应完整数据:', res.data);
           
           if (res.statusCode === 401) {
+            console.log('API请求未授权，跳转到登录页面');
             // 未授权，跳转到登录页
             this.logout();
             reject(new Error('请先登录'));
             // 调用回调函数
             if (options.fail) options.fail(new Error('请先登录'));
           } else if (res.statusCode >= 200 && res.statusCode < 300) {
+            console.log('业务处理成功，返回数据');
             // 由于后端使用了UnifiedResponseMiddleware，所有API响应都被格式化为{code, message, data}结构
             // 当code为0表示成功，我们直接返回data部分
             const responseData = res.data.data || res.data;
@@ -187,6 +192,7 @@ App({
             // 调用回调函数
             if (options.success) options.success(responseData);
           } else {
+            console.log('请求失败，状态码:', res.statusCode);
             const errorMsg = res.data ? (res.data.message || res.data.error || '请求失败') : '请求失败';
             const error = new Error(errorMsg);
             reject(error);
@@ -197,11 +203,15 @@ App({
           if (options.complete) options.complete();
         },
         fail: (err) => {
+          console.log('API请求失败:', { url: options.url, error: err });
           reject(err);
           // 调用回调函数
           if (options.fail) options.fail(err);
           // 调用完成回调
           if (options.complete) options.complete();
+        },
+        complete: () => {
+          console.log('API请求完成:', options.url);
         }
       });
     });

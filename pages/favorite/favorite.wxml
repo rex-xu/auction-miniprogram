@@ -23,41 +23,72 @@
     <!-- 收藏列表 -->
     <view class="favorite-list">
       <block wx:if="{{!loading && favorites.length > 0}}">
-        <view class="favorite-item" wx:for="{{favorites}}" wx:key="id" bindtap="viewDetail" data-id="{{item.id}}" data-type="{{item.type}}">
+        <view class="favorite-item" wx:for="{{favorites}}" wx:key="id" bindtap="viewDetail" data-id="{{item.id}}" data-type="{{item.type}}" data-auction-id="{{item.detailId}}">
           <!-- 收藏的拍卖商品 -->
           <view class="auction-item" wx:if="{{item.type === 'auction'}}">
             <view class="item-image">
               <image src="{{item.auction_item.display_image_url}}" mode="aspectFill"></image>
+              <view class="status-badge {{item.auction_item.status_style}}">{{item.auction_item.status_text}}</view>
             </view>
             <view class="item-info">
               <view class="item-title">{{item.auction_item.title}}</view>
               <view class="item-desc">{{item.auction_item.description}}</view>
-              <view class="item-meta">
-                <text class="current-price">当前价: ¥{{item.auction_item.current_price}}</text>
-                <text class="bid-count">{{item.auction_item.bid_count}}人出价</text>
+              <view class="item-details">
+                <view class="detail-item">
+                  <text class="detail-label">当前价:</text>
+                  <text class="detail-value price-highlight">¥{{item.auction_item.formatted_current_price}}</text>
+                </view>
+                <view class="detail-item">
+                  <text class="detail-label">起始价:</text>
+                  <text class="detail-value">¥{{item.auction_item.formatted_starting_price}}</text>
+                </view>
+                <view class="detail-item">
+                  <text class="detail-label">加价幅度:</text>
+                  <text class="detail-value">¥{{item.auction_item.formatted_increment}}</text>
+                </view>
               </view>
-              <view class="item-status">
-                <text class="status-tag">{{item.auction_item.status_text}}</text>
+              <view class="item-meta">
+                <text class="bid-count">{{item.auction_item.bid_count || 0}}人出价</text>
+                <text class="end-time" wx:if="{{item.auction_item.formatted_end_time}}">结束时间: {{item.auction_item.formatted_end_time}}</text>
               </view>
             </view>
           </view>
           
           <!-- 收藏的藏品资讯 -->
-          <view class="article-item" wx:elif="item.type === 'article'">
-            <view class="article-image" wx:if="{{item.article.cover_image}}">
-              <image src="{{item.article.cover_image}}" mode="aspectFill"></image>
-            </view>
-            <view class="article-info">
-              <view class="article-title">{{item.article.title}}</view>
-              <view class="article-meta">
-                <text class="article-category">{{item.article.category.name}}</text>
-                <text class="article-time">{{item.article.formatted_created_at}}</text>
+            <view class="article-item" wx:elif="{{item.type === 'article'}}">
+              <view class="article-image" wx:if="{{item.article.cover_image}}">
+                <image src="{{item.article.cover_image}}" mode="aspectFill"></image>
+              </view>
+              <view class="article-info">
+                <view class="article-title">{{item.article.title}}</view>
+                <view class="article-content" wx:if="{{item.article.content_preview}}">{{item.article.content_preview}}</view>
+                <view class="article-meta">
+                  <text class="article-source" wx:if="{{item.article.source}}">来源: {{item.article.source}}</text>
+                  <text class="article-category">{{item.article.category ? item.article.category.name : '其他'}}</text>
+                  <text class="article-time">{{item.article.formatted_created_at}}</text>
+                </view>
+                <view class="article-stats" wx:if="{{item.article.view_count || item.article.like_count}}">
+                  <text class="stat-item" wx:if="{{item.article.view_count}}">{{item.article.view_count}} 浏览</text>
+                  <text class="stat-item" wx:if="{{item.article.like_count}}">{{item.article.like_count}} 点赞</text>
+                </view>
               </view>
             </view>
-          </view>
+            
+            <!-- 未知类型收藏 -->
+            <view class="unknown-item" wx:else>
+              <view class="item-image">
+                <image src="{{item.display_image_url}}" mode="aspectFill"></image>
+              </view>
+              <view class="item-info">
+                <view class="item-title">{{item.display_title || '未知收藏项'}}</view>
+                <view class="item-meta">
+                  <text class="item-type">类型: {{item.type || '未知'}}</text>
+                </view>
+              </view>
+            </view>
           
           <!-- 取消收藏按钮 -->
-          <view class="unfavorite-btn" bindtap="unfavorite" data-id="{{item.id}}" catchtap="stopPropagation">
+          <view class="unfavorite-btn" catchtap="unfavorite" data-id="{{item.id}}">
             <text class="icon">★</text>
             <text class="text">取消收藏</text>
           </view>

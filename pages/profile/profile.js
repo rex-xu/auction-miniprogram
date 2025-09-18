@@ -72,6 +72,13 @@ Page({
       url: '/pages/settings/settings'
     });
   },
+  
+  // 跳转到我的收藏页面
+  navigateToFavorite() {
+    wx.navigateTo({
+      url: '/pages/favorite/favorite'
+    });
+  },
 
   // 退出登录
   logout() {
