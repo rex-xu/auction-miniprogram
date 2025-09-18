@@ -48,7 +48,7 @@
                 </view>
               </view>
               <view class="item-meta">
-                <text class="bid-count">{{item.auction_item.bid_count || 0}}人出价</text>
+                <text class="bid-count">{{item.auction_item.bid_count || 0}}次出价</text>
                 <text class="end-time" wx:if="{{item.auction_item.formatted_end_time}}">结束时间: {{item.auction_item.formatted_end_time}}</text>
               </view>
             </view>
